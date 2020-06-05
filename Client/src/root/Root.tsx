@@ -14,14 +14,14 @@ function Root() {
     return <Provider store={rootStore}>
         <Router>
             <Switch>
-                <Route path="/">
+                <Route path="/" exact>
                     <Link to="/follows">Follows</Link>
                     <Link to="/chat">Chat</Link>
                 </Route>
-                <Route path="/follows">
+                <Route path="/follows" exact>
                     <FollowerContainer/>
                 </Route>
-                <Route path="/chat">
+                <Route path="/chat" exact>
                     <ChatContainer/>
                 </Route>
                 <Route>
