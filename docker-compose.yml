@@ -18,6 +18,7 @@ services:
         container_name: server
         environment:
             - CHANNEL_NAME=stevenwaterman
+            - WEBHOOK_PORT=52452
         volumes:
             - secrets.json:/secrets.json
         ports:
