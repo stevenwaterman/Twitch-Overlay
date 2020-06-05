@@ -1,0 +1,26 @@
+---
+version: "2.4"
+services:
+    client:
+        build:
+            context: ./Client
+            args:
+                SERVER_IP: localhost
+        container_name: client
+        env_file:
+            - .env
+        ports:
+            - 5000:5000
+        restart: unless-stopped
+    server:
+        build:
+            context: ./Server
+        container_name: server
+        environment:
+            - CHANNEL_NAME=stevenwaterman
+        volumes:
+            - secrets.json:/secrets.json
+        ports:
+            - 8080:8080
+            - 52452:52452
+        restart: unless-stopped
