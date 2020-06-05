@@ -45,7 +45,10 @@ export default async function startHooks() {
         followedUser: user
     }).then(res => res.total);
 
-    const listener = await WebHookListener.create(twitchClient, {port: process.env.WEBHOOK_PORT});
+    const portString: string | undefined = process.env.WEBHOOK_PORT;
+    if(portString === undefined) throw("port null");
+    const port = parseInt(portString);
+    const listener = await WebHookListener.create(twitchClient, {port});
 
 
     const follows = await listener.subscribeToFollowsToUser(user, (follow: HelixFollow) => {

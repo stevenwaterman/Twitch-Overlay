@@ -6,7 +6,7 @@ import FollowerContainer from "../follows/FollowerContainer";
 import {
     BrowserRouter as Router,
     Switch,
-    Route
+    Route, Link
 } from "react-router-dom";
 import ChatContainer from "../chat/ChatContainer";
 
@@ -14,6 +14,10 @@ function Root() {
     return <Provider store={rootStore}>
         <Router>
             <Switch>
+                <Route path="/">
+                    <Link to="/follows">Follows</Link>
+                    <Link to="/chat">Chat</Link>
+                </Route>
                 <Route path="/follows">
                     <FollowerContainer/>
                 </Route>
