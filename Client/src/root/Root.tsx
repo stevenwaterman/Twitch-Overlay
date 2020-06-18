@@ -9,20 +9,27 @@ import {
     Route, Link
 } from "react-router-dom";
 import ChatContainer from "../chat/ChatContainer";
+import DebugPage from "../debug/DebugPage";
 
 function Root() {
     return <Provider store={rootStore}>
         <Router>
             <Switch>
                 <Route path="/" exact>
-                    <Link to="/follows">Follows</Link>
-                    <Link to="/chat">Chat</Link>
+                    <ul>
+                        <Link to="/follows?fps=60"><li>Follows</li></Link>
+                        <Link to="/chat"><li>Chat</li></Link>
+                        <Link to="/debug"><li>Debug</li></Link>
+                    </ul>
                 </Route>
                 <Route path="/follows" exact>
                     <FollowerContainer/>
                 </Route>
                 <Route path="/chat" exact>
                     <ChatContainer/>
+                </Route>
+                <Route path="/debug" exact>
+                    <DebugPage/>
                 </Route>
                 <Route>
                     Unrecognised Path
