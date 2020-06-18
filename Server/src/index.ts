@@ -30,7 +30,7 @@ function initCallbacks(): Callbacks {
 }
 
 function initEnv(): ENV {
-    const secretsText: string = fs.readFileSync("/home/steven/secrets.json", "utf8");
+    const secretsText: string = fs.readFileSync("secrets.json", "utf8");
     const {clientId, clientSecret, botUsername, botOauth}: {
         clientId: string | undefined,
         clientSecret: string | undefined,
