@@ -19,7 +19,7 @@ services:
         env_file:
             - .env
         volumes:
-            - secrets.json:/secrets.json
+            - ./secrets.json:/secrets.json
         ports:
             - 8080:8080
             - 52452:52452
