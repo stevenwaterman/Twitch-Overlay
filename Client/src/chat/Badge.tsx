@@ -160,13 +160,5 @@ const Badge: React.FunctionComponent<Props> = ({name, version}: Props) => {
         backgroundImage: url
     }}/>
 }
-// display: "inline-block",
-//
-//     backgroundRepeat: "no-repeat",
-//     backgroundSize: "contain",
-//     backgroundPosition: "center",
-//     height: "100%",
-//     width: "20px"
-
 
 export default Badge;

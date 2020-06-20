@@ -40,15 +40,13 @@ const initialState: ChatState = {
 }
 const reducer = createReducer(initialState, builder =>
     builder.addCase(newChat, (state, {payload}) => {
-        console.log(payload);
         state.current = payload;
         state.history.push(payload);
-    })
-        .addCase(removeChat, (state) => {
-            state.history.shift();
-            if (state.history.length === 0) {
-                state.current = null;
-            }
-        }));
+    }).addCase(removeChat, (state) => {
+        state.history.shift();
+        if (state.history.length === 0) {
+            state.current = null;
+        }
+    }));
 
 export default reducer;

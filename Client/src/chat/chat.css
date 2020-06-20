@@ -27,6 +27,24 @@
     margin: 2px;
 }
 
+.chat_line-enter {
+    transform: translateX(100%);
+}
+
+.chat_line-enter-active {
+    transform: translateX(0);
+    transition: transform 200ms;
+}
+
+.chat_line-exit {
+    transform: translateX(0);
+}
+
+.chat_line-exit-active {
+    transform: translateX(100%);
+    transition: transform 200ms;
+}
+
 .chat_line .message {
     word-break: break-all;
     word-wrap: break-word;
