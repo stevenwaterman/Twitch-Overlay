@@ -27,7 +27,7 @@ function Root() {
                     <FollowerContainer/>
                 </Route>
                 <Route path="/chat" exact>
-                    {() => window.location.href=`/chat.html?channel=${process.env.REACT_APP_CHANNEL_NAME}&fade=10&bot_activity=false&prevent_clipping=false&scale=${new URLSearchParams(window.location.search).get("zoom")}`}
+                    {() => window.location.href=`/chatPage.html?channel=${process.env.REACT_APP_CHANNEL_NAME}&fade=10&bot_activity=false&prevent_clipping=false&scale=${new URLSearchParams(window.location.search).get("zoom")}`}
                 </Route>
                 <Route path="/chatAlerts" exact>
                     <ChatAlertsContainer/>
