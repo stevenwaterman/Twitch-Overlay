@@ -18,16 +18,13 @@ function Root() {
                 <Route path="/" exact>
                     <ul>
                         <Link to="/follows?fps=60"><li>Follows</li></Link>
-                        <Link to="/chat?zoom=1"><li>Chat</li></Link>
+                        <Link to={`/chatPage.html?channel=${process.env.REACT_APP_CHANNEL_NAME}&fade=10&bot_activity=false&prevent_clipping=false&scale=1`} target="_blank"><li>Chat</li></Link>
                         <Link to="/chatAlerts"><li>Chat Alerts</li></Link>
                         <Link to="/debug"><li>Debug</li></Link>
                     </ul>
                 </Route>
                 <Route path="/follows" exact>
                     <FollowerContainer/>
-                </Route>
-                <Route path="/chat" exact>
-                    {() => window.location.href=`/chatPage.html?channel=${process.env.REACT_APP_CHANNEL_NAME}&fade=10&bot_activity=false&prevent_clipping=false&scale=${new URLSearchParams(window.location.search).get("zoom")}`}
                 </Route>
                 <Route path="/chatAlerts" exact>
                     <ChatAlertsContainer/>
