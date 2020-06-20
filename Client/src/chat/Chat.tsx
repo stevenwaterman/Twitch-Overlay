@@ -12,7 +12,10 @@ const Chat: React.FunctionComponent = () => {
 
     return <div style={{
         position: "fixed",
-        inset: "5px"
+        top: "5px",
+        left: "5px",
+        right: "5px",
+        bottom: "5px"
     }}>
         <div id="chat_box" style={{
             transform: `scale(${scale})`,
