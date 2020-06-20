@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import Confetti from "react-confetti";
 import useWindowSize from "react-use/lib/useWindowSize";
 import {clearFollowAction} from "./FollowerReducer";
@@ -14,8 +14,26 @@ const FollowerBox: React.FunctionComponent<Props> = ({user, fps}: Props) => {
     const { width, height } = useWindowSize();
     const dispatch = useAppDispatch();
 
+    let soundDone = false;
+    let confettiDone = false;
+    let goldieDone = false;
+    function tryEnd() {
+        if(soundDone && confettiDone && goldieDone) {
+            dispatch(clearFollowAction(user))
+        }
+    }
+
+    useEffect(() => {
+        setTimeout(() => {
+            soundDone = true;
+            tryEnd();
+        }, 5000);
+    })
+
     return <>
-        <Sound playFromPosition={-500} playStatus="PLAYING" url="/followerAlert.wav"/>
+        <Sound playFromPosition={-500} playStatus="PLAYING" url="/followerAlert.wav" onFinishedPlaying={() => {
+        soundDone = true; tryEnd()}
+        }/>
         <div className="goldie" style={{
             display: "flex",
             flexDirection: "row",
@@ -88,7 +106,8 @@ const FollowerBox: React.FunctionComponent<Props> = ({user, fps}: Props) => {
             }}
             tweenFunction={(currentTime, currentValue, targetValue) => {
                 if(currentTime < 500) return 0;
-                if(currentValue === 0) return targetValue;
+                console.log(currentValue);
+                if(currentValue < targetValue) return currentValue + (targetValue/10);
                 return 0;
             }}
             drawShape={ctx => {
@@ -102,7 +121,7 @@ const FollowerBox: React.FunctionComponent<Props> = ({user, fps}: Props) => {
                 ctx.closePath();
             }}
             recycle={false}
-            onConfettiComplete={() => dispatch(clearFollowAction(user))}
+            onConfettiComplete={() => {confettiDone = true; tryEnd()}}
         />
     </>
 }
