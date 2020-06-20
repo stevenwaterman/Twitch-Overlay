@@ -4,11 +4,6 @@ import LogLevel from "@d-fischer/logger/lib/LogLevel";
 import * as fs from "fs";
 import {Callbacks, ENV} from "./index";
 
-export type FollowEvent = {
-    userDisplayName: string,
-    followDate: Date
-}
-
 export async function initHooks(callbacks: Callbacks, {channelName, clientId, clientSecret}: ENV): Promise<Callbacks> {
     console.log("Try auth");
     const twitchClient = TwitchClient.withClientCredentials(clientId, clientSecret, {

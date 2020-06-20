@@ -47,6 +47,8 @@
     "@types/react-redux": "^7.1.8",
     "@types/react-router-dom": "^5.1.5",
     "@types/react-sound": "^1.2.2",
-    "react-sound": "^1.2.0"
+    "dank-twitch-irc": "^3.2.6",
+    "react-sound": "^1.2.0",
+    "twitch": "^4.0.10"
   }
 }

@@ -1,12 +1,12 @@
 import React, {useEffect} from "react";
 import {say} from "./tts";
 
-type Props = {user: string, message: string};
+type Props = {displayName: string, messageText: string};
 
-const ChatAlerts: React.FunctionComponent<Props> = ({user, message}: Props) => {
-    useEffect(() => {say(`${user} says ${message}`)})
+const ChatAlerts: React.FunctionComponent<Props> = ({displayName, messageText}: Props) => {
+    useEffect(() => {say(`${displayName} says ${messageText}`)})
     return <>
-        <div>{user} says {message}</div>
+        <div>{displayName} says {messageText}</div>
         <div onClick={() => {say("hello")}}>Click here if it's broken</div>
     </>
 }

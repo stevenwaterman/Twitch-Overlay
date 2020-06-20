@@ -1,9 +1,11 @@
 import express, {Request, Response} from "express";
 import expressWS from "express-ws";
-import {FollowEvent, initHooks} from "./hooks";
+import {initHooks} from "./hooks";
 import * as ws from 'ws';
-import {ChatEvent, initChat} from "./chat";
+import {initChat} from "./chat";
 import fs from "fs";
+import {PrivmsgMessage} from "dank-twitch-irc";
+import {HelixFollow} from "twitch";
 
 export type ENV = {
     channelName: string
@@ -14,8 +16,8 @@ export type ENV = {
 }
 
 export type Callbacks = {
-    onFollow: (follow: FollowEvent) => void;
-    onChat: (chat: ChatEvent) => void;
+    onFollow: (follow: HelixFollow) => void;
+    onChat: (chat: PrivmsgMessage) => void;
     debugFollow: () => void;
     debugChat: () => void;
 }
@@ -92,29 +94,21 @@ async function start() {
         res.send("Complete");
     });
 
-    function onFollow(follow: FollowEvent) {
+    function onFollow(follow: HelixFollow) {
         sockets = sockets.filter(socket => socket.readyState === 1);
         sockets.forEach(socket => {
             socket.send(JSON.stringify({
                 type: "FOLLOW",
-                payload: {
-                    user: follow.userDisplayName,
-                    time: follow.followDate
-                }
+                payload: follow
             }));
         })
     }
-
-    function onChat(chatEvent: ChatEvent) {
+    function onChat(chatEvent: PrivmsgMessage) {
         sockets = sockets.filter(socket => socket.readyState === 1);
         sockets.forEach(socket => {
             socket.send(JSON.stringify({
                 type: "CHAT",
-                payload: {
-                    user: chatEvent.displayName,
-                    message: chatEvent.messageText,
-                    time: chatEvent.serverTimestamp
-                }
+                payload: chatEvent
             }));
         });
     }

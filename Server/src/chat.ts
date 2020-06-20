@@ -1,11 +1,5 @@
-import {ChatClient} from "dank-twitch-irc";
+import {ChatClient, PrivmsgMessage} from "dank-twitch-irc";
 import {Callbacks, ENV} from "./index";
-
-export type ChatEvent = {
-    displayName: string;
-    messageText: string;
-    serverTimestamp: Date;
-}
 
 export async function initChat(callbacks: Callbacks, {channelName, botUsername, botOauth}: ENV): Promise<Callbacks> {
     const chatClient = new ChatClient({
@@ -21,7 +15,8 @@ export async function initChat(callbacks: Callbacks, {channelName, botUsername, 
         }
     });
 
-    chatClient.on("PRIVMSG", (chatEvent: ChatEvent) => {
+    chatClient.on("PRIVMSG", (chatEvent: PrivmsgMessage) => {
+        console.log(chatEvent);
         callbacks.onChat(chatEvent);
         console.log("Received Chat");
     });
