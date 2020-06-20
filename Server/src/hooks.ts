@@ -1,4 +1,4 @@
-import TwitchClient, {HelixFollow} from "twitch";
+import TwitchClient, {HelixFollow, HelixUser, User} from "twitch";
 import WebHookListener from "twitch-webhooks";
 import LogLevel from "@d-fischer/logger/lib/LogLevel";
 import * as fs from "fs";
@@ -22,7 +22,7 @@ export async function initHooks(callbacks: Callbacks, {channelName, clientId, cl
     }).then(res => res.total);
 
     const portString: string | undefined = process.env.WEBHOOK_PORT;
-    if(portString === undefined) throw("port null");
+    if (portString === undefined) throw("port null");
     const port = parseInt(portString);
     const listener = await WebHookListener.create(twitchClient, {port});
 
@@ -43,10 +43,13 @@ export async function initHooks(callbacks: Callbacks, {channelName, clientId, cl
 
     callbacks.debugFollow = () => {
         console.log("Debug Follow");
-        callbacks.onFollow({
-            userDisplayName: "Debug " + Math.random(),
-            followDate: new Date()
-        });
+        callbacks.onFollow(new HelixFollow({
+            followed_at: new Date().toLocaleDateString(),
+            from_id: user.id,
+            from_name: user.displayName,
+            to_id: user.id,
+            to_name: user.displayName
+        }, twitchClient));
     }
 
     return callbacks;

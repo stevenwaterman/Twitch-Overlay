@@ -15,7 +15,7 @@ const FollowerBox: React.FunctionComponent<Props> = ({user, fps}: Props) => {
     const dispatch = useAppDispatch();
 
     return <>
-        <Sound playStatus="PLAYING" url="/followerAlert.wav"/>
+        <Sound playFromPosition={-500} playStatus="PLAYING" url="/followerAlert.wav"/>
         <div className="goldie" style={{
             display: "flex",
             flexDirection: "row",
@@ -85,6 +85,11 @@ const FollowerBox: React.FunctionComponent<Props> = ({user, fps}: Props) => {
                 y: height/2 - 40,
                 w: 0,
                 h: 0
+            }}
+            tweenFunction={(currentTime, currentValue, targetValue) => {
+                if(currentTime < 500) return 0;
+                if(currentValue === 0) return targetValue;
+                return 0;
             }}
             drawShape={ctx => {
                 ctx.beginPath();

@@ -1,12 +1,20 @@
 .goldie {
-    animation-delay: 4000ms;
-    animation-duration: 1000ms;
-    animation-name: fadeOut;
+    animation-duration: 5000ms;
+    animation-name: fade;
+    animation-timing-function: ease-in-out;
     animation-fill-mode: forwards;
 }
 
-@keyframes fadeOut {
+@keyframes fade {
     from {
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 100%
+    }
+
+    80% {
         opacity: 100%;
     }
 

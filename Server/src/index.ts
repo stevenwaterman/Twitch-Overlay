@@ -99,7 +99,13 @@ async function start() {
         sockets.forEach(socket => {
             socket.send(JSON.stringify({
                 type: "FOLLOW",
-                payload: follow
+                payload: {
+                    userDisplayName: follow.userDisplayName,
+                    userId: follow.userId,
+                    followedUserDisplayName: follow.followedUserDisplayName,
+                    followedUserId: follow.followedUserId,
+                    followDate: follow.followDate
+                }
             }));
         })
     }

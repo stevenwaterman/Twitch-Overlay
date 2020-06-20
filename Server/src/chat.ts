@@ -16,7 +16,6 @@ export async function initChat(callbacks: Callbacks, {channelName, botUsername, 
     });
 
     chatClient.on("PRIVMSG", (chatEvent: PrivmsgMessage) => {
-        console.log(chatEvent);
         callbacks.onChat(chatEvent);
         console.log("Received Chat");
     });
