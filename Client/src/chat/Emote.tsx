@@ -6,6 +6,7 @@ type Props = {
 const Emote: React.FunctionComponent<Props> = ({id}: Props) => {
     return <img
         className="emote"
+        alt={id}
         src={`https://static-cdn.jtvnw.net/emoticons/v1/${id}/4.0`}
         srcSet={`https://static-cdn.jtvnw.net/emoticons/v1/${id}/2.0 2x, https://static-cdn.jtvnw.net/emoticons/v1/${id}/3.0 4x`}/>
 }

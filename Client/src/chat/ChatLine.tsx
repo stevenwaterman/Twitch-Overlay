@@ -26,10 +26,10 @@ const ChatLine: React.FunctionComponent<Props> = ({message}: Props) => {
     })
 
     useEffect(() => setShow(true), [message.messageID]);
+    const chatLineRef = React.createRef<HTMLDivElement>();
 
-
-    return <CSSTransition mountOnEnter unmountOnExit in={show} onExited={() => dispatch(removeChat())} timeout={200} classNames={"chat_line"}>
-        <div className="chat_line">
+    return <CSSTransition mountOnEnter unmountOnExit in={show} onExited={() => dispatch(removeChat())} timeout={200} classNames={"chat_line"} nodeRef={chatLineRef}>
+        <div className="chat_line" ref={chatLineRef}>
             {badges.map(badge => {
                 return <Badge key={badge.name} name={badge.name} version={badge.version}/>
             })}
