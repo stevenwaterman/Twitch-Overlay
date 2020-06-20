@@ -8,7 +8,7 @@ import {
     Switch,
     Route, Link
 } from "react-router-dom";
-import ChatContainer from "../chat/ChatContainer";
+import ChatAlertsContainer from "../chatAlerts/ChatAlertsContainer";
 import DebugPage from "../debug/DebugPage";
 
 function Root() {
@@ -18,7 +18,8 @@ function Root() {
                 <Route path="/" exact>
                     <ul>
                         <Link to="/follows?fps=60"><li>Follows</li></Link>
-                        <Link to="/chat"><li>Chat</li></Link>
+                        <Link to="/chat?zoom=1"><li>Chat</li></Link>
+                        <Link to="/chatAlerts"><li>Chat Alerts</li></Link>
                         <Link to="/debug"><li>Debug</li></Link>
                     </ul>
                 </Route>
@@ -26,7 +27,10 @@ function Root() {
                     <FollowerContainer/>
                 </Route>
                 <Route path="/chat" exact>
-                    <ChatContainer/>
+                    {() => window.location.href=`/chat.html?channel=${process.env.REACT_APP_CHANNEL_NAME}&fade=10&bot_activity=false&prevent_clipping=false&scale=${new URLSearchParams(window.location.search).get("zoom")}`}
+                </Route>
+                <Route path="/chatAlerts" exact>
+                    <ChatAlertsContainer/>
                 </Route>
                 <Route path="/debug" exact>
                     <DebugPage/>
