@@ -12,7 +12,6 @@ RUN echo "REACT_APP_CHANNEL_NAME=${CHANNEL_NAME}" >> .env
 RUN npm ci
 RUN npm run build
 RUN npm i -g serve
-WORKDIR /build
 
 EXPOSE 5000
-ENTRYPOINT ["serve"]
+ENTRYPOINT ["serve", "-s", "build"]

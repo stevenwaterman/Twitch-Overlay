@@ -10,6 +10,7 @@ import {
 } from "react-router-dom";
 import ChatAlertsContainer from "../chatAlerts/ChatAlertsContainer";
 import DebugPage from "../debug/DebugPage";
+import Chat from "../chat/Chat";
 
 function Root() {
     return <Provider store={rootStore}>
@@ -18,7 +19,7 @@ function Root() {
                 <Route path="/" exact>
                     <ul>
                         <Link to="/follows?fps=60"><li>Follows</li></Link>
-                        <Link to={`/chatPage.html?channel=${process.env.REACT_APP_CHANNEL_NAME}&fade=10&bot_activity=false&prevent_clipping=false&scale=1`} target="_blank"><li>Chat</li></Link>
+                        <Link to="/chat"><li>Chat</li></Link>
                         <Link to="/chatAlerts"><li>Chat Alerts</li></Link>
                         <Link to="/debug"><li>Debug</li></Link>
                     </ul>
@@ -29,9 +30,13 @@ function Root() {
                 <Route path="/chatAlerts" exact>
                     <ChatAlertsContainer/>
                 </Route>
+                <Route path="/chat" exact>
+                    <Chat/>
+                </Route>
                 <Route path="/debug" exact>
                     <DebugPage/>
                 </Route>
+
                 <Route>
                     Unrecognised Path
                 </Route>
