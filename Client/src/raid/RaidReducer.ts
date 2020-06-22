@@ -1,6 +1,10 @@
 import {createAction, createReducer} from "@reduxjs/toolkit";
-import {RaidEvent} from "../../../Server/src";
-
+type RaidEvent = {
+    displayName: string,
+    login: string,
+    viewerCount: number,
+    serverTimestamp: Date
+}
 type RaidState = {
     current: RaidEvent | null;
 }
