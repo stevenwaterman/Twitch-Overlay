@@ -3,8 +3,9 @@ import ReactDOM from 'react-dom';
 import Root from './root/Root';
 
 ReactDOM.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <Root />
-  </React.StrictMode>,
+  // </React.StrictMode>
+,
   document.getElementById('root')
 );

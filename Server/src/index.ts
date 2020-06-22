@@ -1,10 +1,10 @@
 import express, {Request, Response} from "express";
 import expressWS from "express-ws";
-import {initHooks} from "./hooks";
+import {initHooks} from "./api";
 import * as ws from 'ws';
-import {initChat} from "./chat";
+import {initChat} from "./irc";
 import fs from "fs";
-import {PrivmsgMessage} from "dank-twitch-irc";
+import {PrivmsgMessage, UsernoticeMessage} from "dank-twitch-irc";
 import {HelixFollow} from "twitch";
 
 export type ENV = {
@@ -15,19 +15,30 @@ export type ENV = {
     botOauth: string
 }
 
+export type RaidEvent = {
+    displayName: string,
+    login: string,
+    viewerCount: number,
+    serverTimestamp: Date
+}
+
 export type Callbacks = {
     onFollow: (follow: HelixFollow) => void;
     onChat: (chat: PrivmsgMessage) => void;
+    onRaid: (raid: RaidEvent) => void;
     debugFollow: () => void;
     debugChat: () => void;
+    debugRaid: () => void;
 }
 
 function initCallbacks(): Callbacks {
     return {
         onFollow: () => { },
         onChat: () => { },
+        onRaid: () => { },
         debugFollow: () => { },
         debugChat: () => { },
+        debugRaid: () => { }
     }
 }
 
@@ -68,6 +79,7 @@ async function start() {
     const callbacks = await initAll();
     callbacks.onFollow = onFollow;
     callbacks.onChat = onChat;
+    callbacks.onRaid = onRaid;
 
     const _app = express();
     const {app} = expressWS(_app);
@@ -93,6 +105,11 @@ async function start() {
         res.status(200);
         res.send("Complete");
     });
+    app.post("/debug/raid", (req: Request, res: Response) => {
+        callbacks.debugRaid();
+        res.status(200);
+        res.send("Complete");
+    })
 
     function onFollow(follow: HelixFollow) {
         sockets = sockets.filter(socket => socket.readyState === 1);
@@ -115,6 +132,15 @@ async function start() {
             socket.send(JSON.stringify({
                 type: "CHAT",
                 payload: chatEvent
+            }));
+        });
+    }
+    function onRaid(raidEvent: RaidEvent) {
+        sockets = sockets.filter(socket => socket.readyState === 1);
+        sockets.forEach(socket => {
+            socket.send(JSON.stringify({
+                type: "RAID",
+                payload: raidEvent
             }));
         });
     }

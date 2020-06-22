@@ -1,0 +1,35 @@
+.raidGoldie {
+    animation-name: raid;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-in-out;
+    animation-duration: 10s;
+}
+
+@keyframes raid {
+    from {
+        transform: translateX(-650px);
+    }
+
+    50% {
+        transform: translateX(calc(75vw - 100% - 50px));
+    }
+}
+
+.smallGoldie {
+    animation-name: jump;
+    animation-iteration-count: infinite;
+}
+
+@keyframes jump {
+    20% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-100%);
+    }
+
+    80% {
+        transform: translateY(0);
+    }
+}

@@ -11,6 +11,7 @@ import {
 import ChatAlertsContainer from "../chatAlerts/ChatAlertsContainer";
 import DebugPage from "../debug/DebugPage";
 import Chat from "../chat/Chat";
+import RaidContainer from "../raid/RaidContainer";
 
 function Root() {
     return <Provider store={rootStore}>
@@ -21,6 +22,7 @@ function Root() {
                         <Link to="/follows?fps=60"><li>Follows</li></Link>
                         <Link to="/chat"><li>Chat</li></Link>
                         <Link to="/chatAlerts"><li>Chat Alerts</li></Link>
+                        <Link to="/raid"><li>Raids</li></Link>
                         <Link to="/debug"><li>Debug</li></Link>
                     </ul>
                 </Route>
@@ -35,6 +37,9 @@ function Root() {
                 </Route>
                 <Route path="/debug" exact>
                     <DebugPage/>
+                </Route>
+                <Route path="/raid" exact>
+                    <RaidContainer/>
                 </Route>
 
                 <Route>

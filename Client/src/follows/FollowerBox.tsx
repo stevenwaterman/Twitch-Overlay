@@ -33,7 +33,7 @@ const FollowerBox: React.FunctionComponent<Props> = ({user, fps}: Props) => {
             if(goldieDone && confettiDone) dispatch(clearFollowAction(user));
         }
         }/>
-        <div className="goldie" style={{
+        <div className="followerGoldie" style={{
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
