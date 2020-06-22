@@ -33,8 +33,6 @@ function gaussRandom(iter: number): number {
 }
 
 const RaidBox: React.FunctionComponent<Props> = ({displayName, viewerCount}: Props) => {
-    console.log("rendering");
-    viewerCount = 0;
     const goldieCount = Math.min(viewerCount, 1000);
     const goldieLeft: number[] = new Array(goldieCount).fill(null).map(() => -(8 * goldieCount + 1000) * gaussRandom(2));
     const goldieBottom: number[] = new Array(goldieCount).fill(null).map(() => (goldieCount + 50) * (gaussRandom(5) - 0.5) + 50);
