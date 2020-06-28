@@ -1,38 +1,37 @@
 import React, {useEffect} from "react";
 import Confetti from "react-confetti";
 import useWindowSize from "react-use/lib/useWindowSize";
-import {clearFollowAction} from "./FollowerReducer";
+import {clearSubscribeAction} from "./SubscriberReducer";
 import {useAppDispatch} from "../root/RootStore";
-import "./follow.css";
+import "./subscribe.css";
 import Sound from "react-sound";
 
 type Props = { user: string; fps: number };
 
 const confettiScale = 10;
 
-const FollowerBox: React.FunctionComponent<Props> = ({user, fps}: Props) => {
+const SubscriberBox: React.FunctionComponent<Props> = ({user, fps}: Props) => {
     const {width, height} = useWindowSize();
     const dispatch = useAppDispatch();
 
     let soundDone = false;
-    let confettiDone = false;
     let goldieDone = false;
 
     useEffect(() => {
         setTimeout(() => {
             // eslint-disable-next-line
             goldieDone = true;
-            if(soundDone && confettiDone) dispatch(clearFollowAction(user));
-        }, 5000);
+            if(soundDone) dispatch(clearSubscribeAction(user));
+        }, 10000);
     }, [user])
 
     return <>
-        <Sound playFromPosition={-500} playStatus="PLAYING" url="/followerAlert.wav" onFinishedPlaying={() => {
+        <Sound playFromPosition={-500} playStatus="PLAYING" url="/subscriberAlert.wav" onFinishedPlaying={() => {
             soundDone = true;
-            if(goldieDone && confettiDone) dispatch(clearFollowAction(user));
+            if(goldieDone) dispatch(clearSubscribeAction(user));
         }
         }/>
-        <div className="followerGoldie" style={{
+        <div className="subscriberGoldie" style={{
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
@@ -54,9 +53,9 @@ const FollowerBox: React.FunctionComponent<Props> = ({user, fps}: Props) => {
                         position: "absolute",
                         fontFamily: "Minecraft-Regular",
                         fontSize: "22pt",
-                        left: 25,
+                        left: 10,
                         top: 40
-                    }}>Thanks for following,
+                    }}>Thanks for subscribing,
                     </div>
                     <div style={{
                         position: "absolute",
@@ -83,8 +82,12 @@ const FollowerBox: React.FunctionComponent<Props> = ({user, fps}: Props) => {
                 zIndex: -2,
                 width: "100%",
                 height: "100%",
+                animationDuration: "9500ms",
+                animationName: "fade",
+                animationTimingFunction: "ease-in-out",
+                animationFillMode: "forwards"
             }}
-            numberOfPieces={100}
+            numberOfPieces={300}
             gravity={10 / fps}
             initialVelocityX={600 / fps}
             initialVelocityY={1200 / fps}
@@ -102,12 +105,6 @@ const FollowerBox: React.FunctionComponent<Props> = ({user, fps}: Props) => {
                 w: 0,
                 h: 0
             }}
-            tweenFunction={(currentTime, currentValue, targetValue) => {
-                if (currentTime < 500) return 0;
-                console.log(currentValue);
-                if (currentValue < targetValue) return currentValue + (targetValue / 10);
-                return 0;
-            }}
             drawShape={ctx => {
                 ctx.beginPath();
                 ctx.arc(-confettiScale, 0, confettiScale, Math.PI, 0, false);
@@ -118,13 +115,9 @@ const FollowerBox: React.FunctionComponent<Props> = ({user, fps}: Props) => {
                 ctx.fill();
                 ctx.closePath();
             }}
-            recycle={false}
-            onConfettiComplete={() => {
-                confettiDone = true;
-                if(goldieDone && soundDone) dispatch(clearFollowAction(user));
-            }}
+            recycle={true}
         />
     </>
 }
 
-export default FollowerBox;
+export default SubscriberBox;

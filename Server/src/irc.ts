@@ -1,10 +1,10 @@
 import {ChatClient, PrivmsgMessage, UsernoticeMessage} from "dank-twitch-irc";
 import {Callbacks, ENV} from "./index";
 
-export async function initChat(callbacks: Callbacks, {channelName, botUsername, botOauth}: ENV): Promise<Callbacks> {
+export async function initChat(callbacks: Callbacks, {channelName, accessToken}: ENV): Promise<Callbacks> {
     const chatClient = new ChatClient({
-        username: botUsername,
-        password: `oauth:${botOauth}`
+        username: channelName,
+        password: `oauth:${accessToken}`
     });
 
     chatClient.on("ready", () => console.log("Successfully connected to chat"));
@@ -41,7 +41,7 @@ export async function initChat(callbacks: Callbacks, {channelName, botUsername, 
     callbacks.debugRaid = () => {
         console.log("Debug Raid");
         callbacks.onRaid({
-            displayName: botUsername, login: botUsername, serverTimestamp: new Date(), viewerCount: 15
+            displayName: channelName, login: channelName, serverTimestamp: new Date(), viewerCount: 15
         })
     }
 

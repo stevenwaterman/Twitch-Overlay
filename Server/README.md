@@ -117,7 +117,7 @@ Update your `tsconfig.json` to set `"jsx"` to `"react"`.
 ### Use a `.tsx` file
 
 Make sure that any files that contain JSX use the `.tsx` extension.
-To get going quickly, just rename `src/api.ts` to `src/index.tsx`, and add the following lines to the bottom:
+To get going quickly, just rename `src/hooks.ts` to `src/index.tsx`, and add the following lines to the bottom:
 
 ```ts
 import React from 'react';
@@ -205,7 +205,7 @@ const extensions = [
 const name = 'RollupTypeScriptBabel';
 
 export default {
-  input: './src/api.ts',
+  input: './src/hooks.ts',
 
   // Specify here external modules which you don't want to include in your bundle (for instance: 'lodash', 'moment' etc.)
   // https://rollupjs.org/guide/en#external-e-external

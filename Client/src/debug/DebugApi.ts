@@ -11,3 +11,7 @@ export async function debugChatRequest() {
 export async function debugRaidRequest() {
     return axios.post(`http://${process.env.REACT_APP_SERVER_IP}/debug/raid`);
 }
+
+export async function debugSubRequest() {
+    return axios.post(`http://${process.env.REACT_APP_SERVER_IP}/debug/sub`);
+}

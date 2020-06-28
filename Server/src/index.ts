@@ -1,18 +1,20 @@
 import express, {Request, Response} from "express";
 import expressWS from "express-ws";
-import {initHooks} from "./api";
+import {initHooks} from "./hooks";
 import * as ws from 'ws';
 import {initChat} from "./irc";
 import fs from "fs";
 import {PrivmsgMessage, UsernoticeMessage} from "dank-twitch-irc";
-import {HelixFollow} from "twitch";
+import TwitchClient, {HelixFollow, HelixSubscriptionEvent, HelixUser} from "twitch";
+import LogLevel from "@d-fischer/logger/lib/LogLevel";
+import {initPubSub, SubEvent} from "./pubsub";
+import {PubSubSubscriptionMessage} from "twitch-pubsub-client";
 
 export type ENV = {
     channelName: string
     clientId: string,
-    clientSecret: string,
-    botUsername: string,
-    botOauth: string
+    accessToken: string,
+    refreshToken: string
 }
 
 export type RaidEvent = {
@@ -24,53 +26,77 @@ export type RaidEvent = {
 
 export type Callbacks = {
     onFollow: (follow: HelixFollow) => void;
+    onSubscribe: (subscriptionEvent: SubEvent) => void;
     onChat: (chat: PrivmsgMessage) => void;
     onRaid: (raid: RaidEvent) => void;
     debugFollow: () => void;
+    debugSubscribe: () => void;
     debugChat: () => void;
     debugRaid: () => void;
 }
 
 function initCallbacks(): Callbacks {
     return {
-        onFollow: () => { },
-        onChat: () => { },
-        onRaid: () => { },
-        debugFollow: () => { },
-        debugChat: () => { },
-        debugRaid: () => { }
+        onFollow: () => {
+        },
+        onSubscribe: () => {
+        },
+        onChat: () => {
+        },
+        onRaid: () => {
+        },
+        debugFollow: () => {
+        },
+        debugSubscribe: () => {
+        },
+        debugChat: () => {
+        },
+        debugRaid: () => {
+        }
     }
 }
 
 function initEnv(): ENV {
     const secretsText: string = fs.readFileSync("secrets.json", "utf8");
-    const {clientId, clientSecret, botUsername, botOauth}: {
+    const {clientId, accessToken, refreshToken}: {
         clientId: string | undefined,
-        clientSecret: string | undefined,
-        botUsername: string | undefined,
-        botOauth: string | undefined
+        accessToken: string | undefined,
+        refreshToken: string | undefined
     } = JSON.parse(secretsText);
     if (clientId === undefined) throw new Error("clientId missing from secrets");
-    if (clientSecret === undefined) throw new Error("clientSecret missing from secret");
-    if (botUsername === undefined) throw new Error("botUserName missing from secret");
-    if (botOauth === undefined) throw new Error("botOauth missing from secret");
+    if (accessToken === undefined) throw new Error("accessToken missing from secret");
+    if (refreshToken === undefined) throw new Error("refreshToken missing from secret");
 
     const channelName: string | undefined = process.env.CHANNEL_NAME;
     if (channelName === undefined) throw new Error("Env Variable CHANNEL_NAME not set");
 
     return {
         clientId,
-        clientSecret,
-        botUsername,
-        botOauth,
+        accessToken,
+        refreshToken,
         channelName
     }
 }
 
 async function initAll(): Promise<Callbacks> {
     const env = initEnv();
+
+    console.log("Try auth");
+    const twitchClient = TwitchClient.withCredentials(env.clientId, env.accessToken, [
+        "user_read", "user_blocks_edit", "user_blocks_read", "user_follows_edit", "channel_read", "channel_editor", "channel_commercial", "channel_stream", "channel_subscriptions", "user_subscriptions", "channel_check_subscription", "chat_login", "channel_feed_read", "channel_feed_edit", "collections_edit", "communities_edit", "communities_moderate", "viewing_activity_read", "openid", "analytics:read:extensions", "user:edit", "user:read:email", "clips:edit", "bits:read", "analytics:read:games", "user:edit:broadcast", "user:read:broadcast", "chat:read", "chat:edit", "channel:moderate", "channel:read:subscriptions", "whispers:read", "whispers:edit", "moderation:read", "channel:read:redemptions", "channel:edit:commercial"
+    ], undefined, {
+        logLevel: LogLevel.TRACE
+    });
+    console.log("Auth success");
+
+    const user: HelixUser | null = await twitchClient.helix.users.getUserByName(env.channelName);
+    if (user === null) {
+        throw("user null");
+    }
+
     let callbacks = initCallbacks();
-    callbacks = await initHooks(callbacks, env);
+    callbacks = await initHooks(callbacks, twitchClient, user, env);
+    callbacks = await initPubSub(callbacks, twitchClient, user, env);
     callbacks = await initChat(callbacks, env);
     return callbacks;
 }
@@ -78,6 +104,7 @@ async function initAll(): Promise<Callbacks> {
 async function start() {
     const callbacks = await initAll();
     callbacks.onFollow = onFollow;
+    callbacks.onSubscribe = onSubscribe;
     callbacks.onChat = onChat;
     callbacks.onRaid = onRaid;
 
@@ -110,6 +137,11 @@ async function start() {
         res.status(200);
         res.send("Complete");
     })
+    app.post("/debug/sub", (req: Request, res: Response) => {
+        callbacks.debugSubscribe();
+        res.status(200);
+        res.send("Complete");
+    })
 
     function onFollow(follow: HelixFollow) {
         sockets = sockets.filter(socket => socket.readyState === 1);
@@ -126,6 +158,17 @@ async function start() {
             }));
         })
     }
+
+    function onSubscribe(subscriptionEvent: SubEvent) {
+        sockets = sockets.filter(socket => socket.readyState === 1);
+        sockets.forEach(socket => {
+            socket.send(JSON.stringify({
+                type: "SUBSCRIBE",
+                payload: subscriptionEvent
+            }));
+        });
+    }
+
     function onChat(chatEvent: PrivmsgMessage) {
         sockets = sockets.filter(socket => socket.readyState === 1);
         sockets.forEach(socket => {
@@ -135,6 +178,7 @@ async function start() {
             }));
         });
     }
+
     function onRaid(raidEvent: RaidEvent) {
         sockets = sockets.filter(socket => socket.readyState === 1);
         sockets.forEach(socket => {

@@ -81,7 +81,7 @@ const RaidBox: React.FunctionComponent<Props> = ({displayName, viewerCount}: Pro
             source.start(ctx.currentTime + startAt);
             source.stop(ctx.currentTime + startAt + 5);
 
-            return <img className="smallGoldie" style={{
+            return <img className="smallGoldie" key={idx} style={{
                 position: "absolute",
                 objectFit: "contain",
                 height: 120,
