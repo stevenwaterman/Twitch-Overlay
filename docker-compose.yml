@@ -5,8 +5,8 @@ services:
         build:
             context: ./Client
             args:
-                SERVER_IP: localhost:8080
-        container_name: client
+                SERVER_IP: "192.168.8.115:30300"
+        container_name: client_amie
         env_file:
             - .env
         ports:
@@ -15,12 +15,12 @@ services:
     server:
         build:
             context: ./Server
-        container_name: server
+        container_name: server_amie
         env_file:
             - .env
         volumes:
             - ./secrets.json:/secrets.json
         ports:
-            - 8080:8080
+            - 30300:8080
             - 52452:52452
         restart: unless-stopped
