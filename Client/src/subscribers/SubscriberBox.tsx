@@ -1,34 +1,42 @@
 import React, {useEffect} from "react";
 import Confetti from "react-confetti";
 import useWindowSize from "react-use/lib/useWindowSize";
-import {clearSubscribeAction} from "./SubscriberReducer";
+import {ChatMessage, clearSubscribeAction} from "./SubscriberReducer";
 import {useAppDispatch} from "../root/RootStore";
 import "./subscribe.css";
 import Sound from "react-sound";
+import {say} from "../tts";
 
-type Props = { user: string; fps: number };
+type Props = { user: string; message: ChatMessage | null ; fps: number };
 
-const confettiScale = 10;
+const confettiScale = 20;
 
-const SubscriberBox: React.FunctionComponent<Props> = ({user, fps}: Props) => {
+const SubscriberBox: React.FunctionComponent<Props> = ({user, message, fps}: Props) => {
     const {width, height} = useWindowSize();
     const dispatch = useAppDispatch();
 
     let soundDone = false;
     let goldieDone = false;
 
+    function done() {
+        dispatch(clearSubscribeAction(user));
+        if(message !== null) {
+            say(message.message)
+        }
+    }
+
     useEffect(() => {
         setTimeout(() => {
             // eslint-disable-next-line
             goldieDone = true;
-            if(soundDone) dispatch(clearSubscribeAction(user));
+            if(soundDone) done();
         }, 10000);
     }, [user])
 
     return <>
         <Sound playFromPosition={-500} playStatus="PLAYING" url="/subscriberAlert.wav" onFinishedPlaying={() => {
             soundDone = true;
-            if(goldieDone) dispatch(clearSubscribeAction(user));
+            if(goldieDone) done();
         }
         }/>
         <div className="subscriberGoldie" style={{
@@ -52,8 +60,8 @@ const SubscriberBox: React.FunctionComponent<Props> = ({user, fps}: Props) => {
                     <div style={{
                         position: "absolute",
                         fontFamily: "Minecraft-Regular",
-                        fontSize: "22pt",
-                        left: 10,
+                        fontSize: "20pt",
+                        left: 5,
                         top: 40
                     }}>Thanks for subscribing,
                     </div>
@@ -88,17 +96,17 @@ const SubscriberBox: React.FunctionComponent<Props> = ({user, fps}: Props) => {
                 animationFillMode: "forwards"
             }}
             numberOfPieces={300}
-            gravity={10 / fps}
+            gravity={5 / fps}
             initialVelocityX={600 / fps}
             initialVelocityY={1200 / fps}
             width={width}
             height={height}
-            colors={[
-                "#ffcdb2",
-                "#ffb4a2",
-                "#e5989b",
-                "#b5838d"
-            ]}
+            // colors={[
+            //     "#ffcdb2",
+            //     "#ffb4a2",
+            //     "#e5989b",
+            //     "#b5838d"
+            // ]}
             confettiSource={{
                 x: width / 2,
                 y: height / 2 - 40,

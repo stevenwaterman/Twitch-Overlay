@@ -35,7 +35,7 @@ export async function initChat(callbacks: Callbacks, {channelName, accessToken}:
 
     callbacks.debugChat = () => {
         console.log("Debug Chat");
-        chatClient.say(channelName, "This is an automatic debug message!");
+        chatClient.say(channelName, "This is an automatic debug message! itsami4Goldie");
     }
 
     callbacks.debugRaid = () => {
