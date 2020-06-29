@@ -63,6 +63,15 @@ function tokenise(text: string, emotes: TwitchEmoteList): Array<Token["content"]
             content: <EmoteComponent key={emote.startIndex} id={emote.id}/>
         })
     })
+    let goldieIdx = text.indexOf("GOLDIE");
+    while(goldieIdx !== -1) {
+        emoteTokens.push({
+            start: goldieIdx,
+            end: goldieIdx + 6,
+            content: <EmoteComponent key={goldieIdx} id={"302652882"}/>
+        });
+        goldieIdx = text.indexOf("GOLDIE", goldieIdx + 5);
+    }
     emoteTokens.sort((a,b) => a.start - b.start);
 
     const textTokens: TextToken[] = [];

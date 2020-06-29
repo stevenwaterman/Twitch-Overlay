@@ -1,13 +1,43 @@
 import {createAction, createReducer} from "@reduxjs/toolkit";
 import {HelixSubscriptionEvent} from "twitch";
 
-type UserSubscribe = HelixSubscriptionEvent;
+export type MessageInfo = {
+    userName: string;
+    userId: string;
+    userDisplayName: string;
+    time: Date;
+}
+export type ChatMessage = {
+    message: string;
+    emotes: ChatMessageEmote[];
+}
+export type ChatMessageEmote = {
+    start: number;
+    end: number;
+    id: number;
+}
+export type SubDetail = {
+    context: "sub" | "resub";
+    subPlan: "Prime" | "1000" | "2000" | "3000";
+    subMessage: ChatMessage | null;
+    cumulativeMonths: number;
+    streakMonths: number;
+}
+export type SubGiftDetail = {
+    context: 'subgift' | 'anonsubgift';
+    subPlan: "1000" | "2000" | "3000";
+    recipientId: string;
+    recipientUserName: string;
+    recipientDisplayName: string;
+    months: number;
+}
+export type SubEvent = MessageInfo & (SubDetail | SubGiftDetail);
 type SubscriberState = {
-    queue: UserSubscribe[];
-    current: UserSubscribe | null;
+    queue: SubEvent[];
+    current: SubEvent | null;
 }
 
-export const subscribeAction = createAction<HelixSubscriptionEvent, "SUBSCRIBE">("SUBSCRIBE")
+export const subscribeAction = createAction<SubEvent, "SUBSCRIBE">("SUBSCRIBE")
 export const clearSubscribeAction = createAction<string, "CLEAR_SUBSCRIBE">("CLEAR_SUBSCRIBE");
 
 const initialState: SubscriberState = {
@@ -23,7 +53,7 @@ builder.addCase(subscribeAction, (state, {payload}) => {
     }
 }).addCase(clearSubscribeAction, (state) => {
     if(state.queue.length > 0) {
-        state.current = state.queue.pop() as UserSubscribe;
+        state.current = state.queue.pop() as SubEvent;
     } else {
         state.current = null;
     }

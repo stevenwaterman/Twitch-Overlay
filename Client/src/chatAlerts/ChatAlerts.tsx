@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {say} from "./tts";
+import {say} from "../tts";
 
 type Props = {displayName: string, messageText: string};
 

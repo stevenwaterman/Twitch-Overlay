@@ -19,20 +19,20 @@ export type ChatMessageEmote = {
 }
 export type SubDetail = {
     context: "sub" | "resub";
+    subPlan: "Prime" | "1000" | "2000" | "3000";
+    subMessage: ChatMessage | null;
     cumulativeMonths: number;
     streakMonths: number;
 }
 export type SubGiftDetail = {
     context: 'subgift' | 'anonsubgift';
+    subPlan: "1000" | "2000" | "3000";
     recipientId: string;
     recipientUserName: string;
     recipientDisplayName: string;
     months: number;
 }
-export type SubEvent = MessageInfo & {
-    subPlan: "Prime" | "1000" | "2000" | "3000";
-    subMessage: ChatMessage | null;
-} & (SubDetail | SubGiftDetail);
+export type SubEvent = MessageInfo & (SubDetail | SubGiftDetail);
 
 export async function initPubSub(callbacks: Callbacks, twitchClient: TwitchClient, user: HelixUser, {}: ENV): Promise<Callbacks> {
     const client = new PubSubClient();
@@ -47,10 +47,13 @@ export async function initPubSub(callbacks: Callbacks, twitchClient: TwitchClien
         }
         const subDetail: SubDetail | SubGiftDetail = subscription.isGift ? {
             context: subscription.isResub ? "resub" : "sub",
+            subPlan: subscription.subPlan,
             cumulativeMonths: subscription.cumulativeMonths,
-            streakMonths: subscription.streakMonths
+            streakMonths: subscription.streakMonths,
+            subMessage: subscription.message
         } : {
             context: subscription.isAnonymous ? "anonsubgift" : "subgift",
+            subPlan: subscription.subPlan as "1000" | "2000" | "3000",
             months: subscription.months,
             recipientDisplayName: subscription.userDisplayName,
             recipientId: subscription.userId,
@@ -58,9 +61,7 @@ export async function initPubSub(callbacks: Callbacks, twitchClient: TwitchClien
         }
         const subEvent: SubEvent = {
             ...messageInfo,
-            ...subDetail,
-            subMessage: subscription.message,
-            subPlan: subscription.subPlan,
+            ...subDetail
         }
 
         callbacks.onSubscribe(subEvent);
