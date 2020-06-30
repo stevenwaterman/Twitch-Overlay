@@ -23,7 +23,7 @@ new Array(22).fill(null).forEach(async (_, idx) => {
 });
 
 let warBuffer: AudioBuffer | null = null;
-fetch("/meows/war.wav").then(res => res.arrayBuffer()).then(res => ctx.decodeAudioData(res)).then(res => warBuffer = res);
+fetch("/sounds/raidAlert.wav").then(res => res.arrayBuffer()).then(res => ctx.decodeAudioData(res)).then(res => warBuffer = res);
 
 /**
  * 0-1, more centered if iter increased
@@ -90,12 +90,12 @@ const RaidBox: React.FunctionComponent<Props> = ({displayName, viewerCount}: Pro
                 bottom: goldieBottom[idx],
                 animationDelay: `${Math.random() * 3000}ms`,
                 animationDuration: `${1000 + Math.random() * 1000}ms`,
-            }} src="/goldie-nosign.png" alt="Goldie!"/>
+            }} src="/images/goldie-nosign.svg" alt="Goldie!"/>
         })}
         <div style={{
             position: "relative"
         }}>
-            <img src="/goldie.png" alt="Goldie!"/>
+            <img src="/images/goldie-sign.svg" alt="Goldie!"/>
             <div style={{
                 position: "absolute",
                 display: "flex",

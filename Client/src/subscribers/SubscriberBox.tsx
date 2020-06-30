@@ -15,28 +15,17 @@ const SubscriberBox: React.FunctionComponent<Props> = ({user, message, fps}: Pro
     const {width, height} = useWindowSize();
     const dispatch = useAppDispatch();
 
-    let soundDone = false;
-    let goldieDone = false;
-
-    function done() {
-        dispatch(clearSubscribeAction(user));
-        if(message !== null) {
-            say(message.message)
-        }
-    }
-
     useEffect(() => {
         setTimeout(() => {
-            // eslint-disable-next-line
-            goldieDone = true;
-            if(soundDone) done();
-        }, 10000);
-    }, [user])
+            if(message !== null) {
+                say(message.message)
+            }
+        }, 11000)
+    }, [message])
 
     return <>
-        <Sound playFromPosition={-500} playStatus="PLAYING" url="/subscriberAlert.wav" onFinishedPlaying={() => {
-            soundDone = true;
-            if(goldieDone) done();
+        <Sound playFromPosition={-500} playStatus="PLAYING" url="/sounds/subscriberAlert.wav" onFinishedPlaying={() => {
+            dispatch(clearSubscribeAction(user));
         }
         }/>
         <div className="subscriberGoldie" style={{
@@ -56,13 +45,13 @@ const SubscriberBox: React.FunctionComponent<Props> = ({user, message, fps}: Pro
                 width: "100vw"
             }}>
                 <div style={{position: "relative", flexGrow: 0, flexShrink: 0}}>
-                    <img src="/goldie.png" alt="Goldie!"/>
+                    <img src="/images/goldie-crown-sign.svg" alt="Goldie!"/>
                     <div style={{
                         position: "absolute",
                         fontFamily: "Minecraft-Regular",
                         fontSize: "20pt",
                         left: 5,
-                        top: 40
+                        top: 90
                     }}>Thanks for subscribing,
                     </div>
                     <div style={{
@@ -77,7 +66,7 @@ const SubscriberBox: React.FunctionComponent<Props> = ({user, message, fps}: Pro
                         width: 280,
                         height: 120,
                         left: 30,
-                        top: 80
+                        top: 130
                     }}>{user}!
                     </div>
                 </div>
@@ -90,23 +79,18 @@ const SubscriberBox: React.FunctionComponent<Props> = ({user, message, fps}: Pro
                 zIndex: -2,
                 width: "100%",
                 height: "100%",
-                animationDuration: "9500ms",
-                animationName: "fade",
-                animationTimingFunction: "ease-in-out",
-                animationFillMode: "forwards"
             }}
-            numberOfPieces={300}
+            className="subscriberConfetti"
+            numberOfPieces={150}
             gravity={5 / fps}
             initialVelocityX={600 / fps}
             initialVelocityY={1200 / fps}
             width={width}
             height={height}
-            // colors={[
-            //     "#ffcdb2",
-            //     "#ffb4a2",
-            //     "#e5989b",
-            //     "#b5838d"
-            // ]}
+            tweenFunction={((currentTime, currentValue, targetValue) => {
+                console.log(currentTime);
+                return currentTime < 1000 ? 0 : Math.min(currentValue + 5, targetValue)
+            })}
             confettiSource={{
                 x: width / 2,
                 y: height / 2 - 40,

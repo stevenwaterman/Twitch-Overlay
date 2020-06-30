@@ -1,4 +1,12 @@
 .subscriberGoldie {
+    animation-duration: 12000ms;
+    animation-name: fade;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+}
+
+.subscriberConfetti {
+    animation-delay: 1000ms;
     animation-duration: 10000ms;
     animation-name: fade;
     animation-timing-function: ease-in-out;
