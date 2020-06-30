@@ -1,5 +1,4 @@
 import {createAction, createReducer} from "@reduxjs/toolkit";
-import {HelixSubscriptionEvent} from "twitch";
 
 export type MessageInfo = {
     userName: string;

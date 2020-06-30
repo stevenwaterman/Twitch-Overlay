@@ -19,7 +19,6 @@ export async function initChat(callbacks: Callbacks, {channelName, accessToken}:
         console.log("Received Chat");
     });
 
-
     chatClient.on("USERNOTICE", (usernoticeEvent: UsernoticeMessage) => {
         if (usernoticeEvent.isRaid()) {
             console.log("Received Raid");

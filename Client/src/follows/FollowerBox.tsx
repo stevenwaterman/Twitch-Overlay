@@ -27,7 +27,7 @@ const FollowerBox: React.FunctionComponent<Props> = ({user, fps}: Props) => {
     }, [user])
 
     return <>
-        <Sound playFromPosition={-500} playStatus="PLAYING" url="/followerAlert.wav" onFinishedPlaying={() => {
+        <Sound playFromPosition={-500} playStatus="PLAYING" url="/sounds/followerAlert.wav" onFinishedPlaying={() => {
             soundDone = true;
             if(goldieDone && confettiDone) dispatch(clearFollowAction(user));
         }
@@ -49,7 +49,7 @@ const FollowerBox: React.FunctionComponent<Props> = ({user, fps}: Props) => {
                 width: "100vw"
             }}>
                 <div style={{position: "relative", flexGrow: 0, flexShrink: 0}}>
-                    <img src="/goldie.png" alt="Goldie!"/>
+                    <img src="/images/goldie-sign.svg" alt="Goldie!"/>
                     <div style={{
                         position: "absolute",
                         fontFamily: "Minecraft-Regular",
