@@ -1,43 +1,35 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import Confetti from "react-confetti";
 import useWindowSize from "react-use/lib/useWindowSize";
-import {clearFollowAction} from "./FollowerReducer";
+import {clearBitsAction} from "./BitsReducer";
 import {useAppDispatch} from "../root/RootStore";
-import "./follow.css";
+import "./bits.css";
 import {play} from "../audio";
 
-type Props = { user: string; fps: number };
+type Props = { id: string; user: string; message: string; bits: number; fps: number };
 
-const confettiScale = 10;
+const confettiScale = 20;
 
-const FollowerBox: React.FunctionComponent<Props> = ({user, fps}: Props) => {
+const BitsBox: React.FunctionComponent<Props> = ({id, user, bits, message, fps}: Props) => {
     const {width, height} = useWindowSize();
     const dispatch = useAppDispatch();
 
     let soundDone = false;
     let confettiDone = false;
-    let goldieDone = false;
+
+    const [bitsDisplay, setBitsDisplay] = useState(0);
 
     useEffect(() => {
-        setTimeout(() => {
-            // eslint-disable-next-line
-            goldieDone = true;
-            if(soundDone && confettiDone) dispatch(clearFollowAction(user));
-        }, 5000);
-    }, [user])
-
-    useEffect(() => {
-        const duration = play("followerAlert", {start: 0.5})
+        const duration = play("bitsAlert");
         setTimeout(() => {
             // eslint-disable-next-line react-hooks/exhaustive-deps
             soundDone = true;
-            if(goldieDone && confettiDone) dispatch(clearFollowAction);
-        }, duration);
-    })
+            if(confettiDone) dispatch(clearBitsAction());
+        }, duration)
+    }, [id])
 
     return <>
-        }/>
-        <div className="followerGoldie" style={{
+        <div className="bitsLogo" style={{
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
@@ -54,29 +46,24 @@ const FollowerBox: React.FunctionComponent<Props> = ({user, fps}: Props) => {
                 width: "100vw"
             }}>
                 <div style={{position: "relative", flexGrow: 0, flexShrink: 0}}>
-                    <img src="/images/goldie-sign.svg" alt="Goldie!"/>
+                    <img src="/images/bits.svg" alt="Bits!"/>
                     <div style={{
                         position: "absolute",
                         fontFamily: "Minecraft-Regular",
                         fontSize: "22pt",
-                        left: 25,
-                        top: 40
-                    }}>Thanks for following,
+                        textAlign: "center",
+                        width: "100%",
+                        top: 250
+                    }}>{user} just cheered with
                     </div>
                     <div style={{
                         position: "absolute",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        textAlign: "center",
-                        wordWrap: "break-word",
                         fontFamily: "Minecraft-Regular",
-                        fontSize: "28pt",
-                        width: 280,
-                        height: 120,
-                        left: 30,
-                        top: 80
-                    }}>{user}!
+                        fontSize: "22pt",
+                        textAlign: "center",
+                        width: "100%",
+                        top: 325
+                    }}>{Math.round(bitsDisplay)} {Math.round(bitsDisplay) === 1 ? "bit!" : "bits!"}
                     </div>
                 </div>
             </div>
@@ -89,17 +76,16 @@ const FollowerBox: React.FunctionComponent<Props> = ({user, fps}: Props) => {
                 width: "100%",
                 height: "100%",
             }}
-            numberOfPieces={100}
+            numberOfPieces={Math.min(2000, bits)}
             gravity={10 / fps}
             initialVelocityX={600 / fps}
             initialVelocityY={1200 / fps}
             width={width}
             height={height}
             colors={[
-                "#ffcdb2",
-                "#ffb4a2",
-                "#e5989b",
-                "#b5838d"
+                "#7730ef",
+                "#a886f6",
+                "#c8b7f9",
             ]}
             confettiSource={{
                 x: width / 2,
@@ -107,28 +93,30 @@ const FollowerBox: React.FunctionComponent<Props> = ({user, fps}: Props) => {
                 w: 0,
                 h: 0
             }}
+            tweenDuration={8000}
             tweenFunction={(currentTime, currentValue, targetValue) => {
-                if (currentTime < 500) return 0;
-                if (currentValue < targetValue) return currentValue + (targetValue / 10);
-                return 0;
+                if (currentTime < 2500) return 0;
+                const fraction = (currentTime-2500)/5500;
+                console.log(currentTime);
+                setBitsDisplay(fraction * bits);
+                return fraction * targetValue;
             }}
             drawShape={ctx => {
                 ctx.beginPath();
-                ctx.arc(-confettiScale, 0, confettiScale, Math.PI, 0, false);
-                ctx.arc(confettiScale, 0, confettiScale, Math.PI, 0, false);
-                ctx.moveTo(-2 * confettiScale, 0);
-                ctx.lineTo(0, 2 * confettiScale);
-                ctx.lineTo(2 * confettiScale, 0);
+                ctx.lineTo(confettiScale, -2*confettiScale);
+                ctx.lineTo(2*confettiScale, 0);
+                ctx.lineTo(confettiScale, confettiScale);
+                ctx.lineTo(0,0);
                 ctx.fill();
                 ctx.closePath();
             }}
             recycle={false}
             onConfettiComplete={() => {
                 confettiDone = true;
-                if(goldieDone && soundDone) dispatch(clearFollowAction(user));
+                if(soundDone) dispatch(clearBitsAction());
             }}
         />
     </>
 }
 
-export default FollowerBox;
+export default BitsBox;

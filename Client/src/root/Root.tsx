@@ -13,6 +13,7 @@ import DebugPage from "../debug/DebugPage";
 import Chat from "../chat/Chat";
 import RaidContainer from "../raid/RaidContainer";
 import SubscriberContainer from "../subscribers/SubscriberContainer";
+import BitsContainer from "../bits/BitsContainer";
 
 function Root() {
     return <Provider store={rootStore}>
@@ -22,6 +23,7 @@ function Root() {
                     <ul>
                         <Link to="/follows?fps=60"><li>Follows</li></Link>
                         <Link to="/subscribers?fps=60"><li>Subscribers</li></Link>
+                        <Link to="/bits?fps=60"><li>Bits</li></Link>
                         <Link to="/chat"><li>Chat</li></Link>
                         <Link to="/chatAlerts"><li>Chat Alerts</li></Link>
                         <Link to="/raid"><li>Raids</li></Link>
@@ -34,6 +36,9 @@ function Root() {
                 </Route>
                 <Route path="/subscribers" exact>
                     <SubscriberContainer/>
+                </Route>
+                <Route path="/bits" exact>
+                    <BitsContainer/>
                 </Route>
                 <Route path="/chatAlerts" exact>
                     <ChatAlertsContainer/>
@@ -49,6 +54,7 @@ function Root() {
                 </Route>
                 <Route path="/overlay" exact>
                     <SubscriberContainer/>
+                    <BitsContainer/>
                     <RaidContainer/>
                     <FollowerContainer/>
                 </Route>

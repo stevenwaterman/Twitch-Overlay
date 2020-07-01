@@ -1,43 +1,37 @@
 import React, {useEffect} from "react";
 import Confetti from "react-confetti";
 import useWindowSize from "react-use/lib/useWindowSize";
-import {clearFollowAction} from "./FollowerReducer";
+import {ChatMessage, clearSubscribeAction} from "./SubscriberReducer";
 import {useAppDispatch} from "../root/RootStore";
-import "./follow.css";
+import "./subscribe.css";
+import {say} from "../tts";
 import {play} from "../audio";
 
-type Props = { user: string; fps: number };
+type Props = { user: string; message: ChatMessage | null ; fps: number };
 
-const confettiScale = 10;
+const confettiScale = 20;
 
-const FollowerBox: React.FunctionComponent<Props> = ({user, fps}: Props) => {
+const SelfSubscriberBox: React.FunctionComponent<Props> = ({user, message, fps}: Props) => {
     const {width, height} = useWindowSize();
     const dispatch = useAppDispatch();
 
-    let soundDone = false;
-    let confettiDone = false;
-    let goldieDone = false;
-
     useEffect(() => {
         setTimeout(() => {
-            // eslint-disable-next-line
-            goldieDone = true;
-            if(soundDone && confettiDone) dispatch(clearFollowAction(user));
-        }, 5000);
-    }, [user])
+            if(message !== null) {
+                say(message.message)
+            }
+        }, 11000)
+    }, [message])
 
     useEffect(() => {
-        const duration = play("followerAlert", {start: 0.5})
+        const duration = play("subscriberAlert", {start: 0.5});
         setTimeout(() => {
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-            soundDone = true;
-            if(goldieDone && confettiDone) dispatch(clearFollowAction);
+            dispatch(clearSubscribeAction());
         }, duration);
     })
 
     return <>
-        }/>
-        <div className="followerGoldie" style={{
+        <div className="subscriberGoldie" style={{
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
@@ -54,14 +48,14 @@ const FollowerBox: React.FunctionComponent<Props> = ({user, fps}: Props) => {
                 width: "100vw"
             }}>
                 <div style={{position: "relative", flexGrow: 0, flexShrink: 0}}>
-                    <img src="/images/goldie-sign.svg" alt="Goldie!"/>
+                    <img src="/images/goldie-crown-sign.svg" alt="Goldie!"/>
                     <div style={{
                         position: "absolute",
                         fontFamily: "Minecraft-Regular",
-                        fontSize: "22pt",
-                        left: 25,
-                        top: 40
-                    }}>Thanks for following,
+                        fontSize: "24pt",
+                        left: 110,
+                        top: 90
+                    }}>Thanks
                     </div>
                     <div style={{
                         position: "absolute",
@@ -73,10 +67,17 @@ const FollowerBox: React.FunctionComponent<Props> = ({user, fps}: Props) => {
                         fontFamily: "Minecraft-Regular",
                         fontSize: "28pt",
                         width: 280,
-                        height: 120,
                         left: 30,
-                        top: 80
-                    }}>{user}!
+                        top: 150
+                    }}>{user}
+                    </div>
+                    <div style={{
+                        position: "absolute",
+                        fontFamily: "Minecraft-Regular",
+                        fontSize: "24pt",
+                        left: 65,
+                        top: 220
+                    }}>for the sub!
                     </div>
                 </div>
             </div>
@@ -89,28 +90,19 @@ const FollowerBox: React.FunctionComponent<Props> = ({user, fps}: Props) => {
                 width: "100%",
                 height: "100%",
             }}
-            numberOfPieces={100}
-            gravity={10 / fps}
+            className="subscriberConfetti"
+            numberOfPieces={150}
+            gravity={5 / fps}
             initialVelocityX={600 / fps}
             initialVelocityY={1200 / fps}
             width={width}
             height={height}
-            colors={[
-                "#ffcdb2",
-                "#ffb4a2",
-                "#e5989b",
-                "#b5838d"
-            ]}
+            tweenFunction={(currentTime, currentValue, targetValue) => currentTime < 1000 ? 0 : Math.min(currentValue + 5, targetValue)}
             confettiSource={{
                 x: width / 2,
                 y: height / 2 - 40,
                 w: 0,
                 h: 0
-            }}
-            tweenFunction={(currentTime, currentValue, targetValue) => {
-                if (currentTime < 500) return 0;
-                if (currentValue < targetValue) return currentValue + (targetValue / 10);
-                return 0;
             }}
             drawShape={ctx => {
                 ctx.beginPath();
@@ -122,13 +114,9 @@ const FollowerBox: React.FunctionComponent<Props> = ({user, fps}: Props) => {
                 ctx.fill();
                 ctx.closePath();
             }}
-            recycle={false}
-            onConfettiComplete={() => {
-                confettiDone = true;
-                if(goldieDone && soundDone) dispatch(clearFollowAction(user));
-            }}
+            recycle={true}
         />
     </>
 }
 
-export default FollowerBox;
+export default SelfSubscriberBox;

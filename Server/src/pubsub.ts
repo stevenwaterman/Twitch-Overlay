@@ -1,6 +1,6 @@
 import {Callbacks, ENV} from "./index";
 import TwitchClient, {HelixUser} from "twitch";
-import PubSubClient, {PubSubSubscriptionMessage} from "twitch-pubsub-client";
+import PubSubClient, {PubSubBitsMessage, PubSubSubscriptionMessage} from "twitch-pubsub-client";
 
 export type MessageInfo = {
     userName: string;
@@ -34,16 +34,26 @@ export type SubGiftDetail = {
 }
 export type SubEvent = MessageInfo & (SubDetail | SubGiftDetail);
 
+export type BitsEvent = {
+    bits: number,
+    totalBits: number,
+    isAnonymous: boolean,
+    message: string,
+    userId: string,
+    userName: string
+}
+
 export async function initPubSub(callbacks: Callbacks, twitchClient: TwitchClient, user: HelixUser, {}: ENV): Promise<Callbacks> {
     const client = new PubSubClient();
     await client.registerUserListener(twitchClient, user);
+
     await client.onSubscription(user, (subscription: PubSubSubscriptionMessage) => {
         console.log("Subscription from " + subscription.userDisplayName);
         const messageInfo: MessageInfo = {
             time: subscription.time,
-            userId: subscription.isGift ? subscription.gifterId || "Anonymous" : subscription.userId,
-            userName: subscription.isGift ? subscription.gifterName || "Anonymous" : subscription.userName,
-            userDisplayName: subscription.isGift? subscription.gifterDisplayName || "Anonymous" : subscription.userDisplayName,
+            userId: subscription.isGift ? (subscription.isAnonymous ? subscription.gifterId as string : "Anonymous") : subscription.userId,
+            userName: subscription.isGift ? (subscription.isAnonymous ? subscription.gifterName as string : "Anonymous") : subscription.userName,
+            userDisplayName: subscription.isGift ? (subscription.isAnonymous ? subscription.gifterDisplayName as string : "Anonymous") : subscription.userDisplayName,
         }
         const subDetail: SubDetail | SubGiftDetail = subscription.isGift ? {
             context: subscription.isResub ? "resub" : "sub",
@@ -67,6 +77,19 @@ export async function initPubSub(callbacks: Callbacks, twitchClient: TwitchClien
         callbacks.onSubscribe(subEvent);
     })
 
+    await client.onBits(user, async (bits: PubSubBitsMessage) => {
+        const user = bits.isAnonymous ? null : await bits.getUser();
+        const displayName = user === null ? bits.userName : user.displayName;
+        callbacks.onBits({
+            bits: bits.bits,
+            isAnonymous: bits.isAnonymous,
+            message: bits.message,
+            totalBits: bits.totalBits,
+            userId: displayName || "Anonymous",
+            userName: "Anonymous"
+        })
+    })
+
     callbacks.debugSubscribe = () => {
         console.log("Debug Subscribe");
         callbacks.onSubscribe({
@@ -83,6 +106,34 @@ export async function initPubSub(callbacks: Callbacks, twitchClient: TwitchClien
             userName: user.name,
             userDisplayName: user.displayName
         })
+    }
+
+    callbacks.debugGiftSubscribe = () => {
+        console.log("Debug Gift Subscribe");
+        callbacks.onSubscribe({
+            context: "subgift",
+            months: 1,
+            recipientDisplayName: "Recipient",
+            recipientId: user.id,
+            recipientUserName: "recipied",
+            userDisplayName: "Giver",
+            userId: user.id,
+            userName: "giver",
+            time: new Date(),
+            subPlan: "1000"
+        })
+    }
+
+    callbacks.debugBits = () => {
+        console.log("Debug Bits");
+        callbacks.onBits({
+            isAnonymous: false,
+            userId: user.id,
+            userName: user.displayName,
+            message: "Corgo100",
+            bits: 100,
+            totalBits: 500
+        });
     }
 
     return callbacks;

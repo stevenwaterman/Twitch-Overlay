@@ -15,3 +15,11 @@ export async function debugRaidRequest() {
 export async function debugSubRequest() {
     return axios.post(`http://${process.env.REACT_APP_SERVER_IP}/debug/sub`);
 }
+
+export async function debugGiftSubRequest() {
+    return axios.post(`http://${process.env.REACT_APP_SERVER_IP}/debug/giftsub`);
+}
+
+export async function debugBitsRequest() {
+    return axios.post(`http://${process.env.REACT_APP_SERVER_IP}/debug/bits`);
+}

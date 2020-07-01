@@ -7,7 +7,7 @@ import fs from "fs";
 import {PrivmsgMessage, UsernoticeMessage} from "dank-twitch-irc";
 import TwitchClient, {HelixFollow, HelixSubscriptionEvent, HelixUser} from "twitch";
 import LogLevel from "@d-fischer/logger/lib/LogLevel";
-import {initPubSub, SubEvent} from "./pubsub";
+import {BitsEvent, initPubSub, SubEvent} from "./pubsub";
 import {PubSubSubscriptionMessage} from "twitch-pubsub-client";
 
 export type ENV = {
@@ -27,10 +27,13 @@ export type RaidEvent = {
 export type Callbacks = {
     onFollow: (follow: HelixFollow) => void;
     onSubscribe: (subscriptionEvent: SubEvent) => void;
+    onBits: (bitsEvent: BitsEvent) => void;
     onChat: (chat: PrivmsgMessage) => void;
     onRaid: (raid: RaidEvent) => void;
     debugFollow: () => void;
     debugSubscribe: () => void;
+    debugGiftSubscribe: () => void;
+    debugBits: () => void;
     debugChat: () => void;
     debugRaid: () => void;
 }
@@ -41,6 +44,8 @@ function initCallbacks(): Callbacks {
         },
         onSubscribe: () => {
         },
+        onBits: () => {
+        },
         onChat: () => {
         },
         onRaid: () => {
@@ -48,6 +53,10 @@ function initCallbacks(): Callbacks {
         debugFollow: () => {
         },
         debugSubscribe: () => {
+        },
+        debugBits: () => {
+        },
+        debugGiftSubscribe: () => {
         },
         debugChat: () => {
         },
@@ -105,6 +114,7 @@ async function start() {
     const callbacks = await initAll();
     callbacks.onFollow = onFollow;
     callbacks.onSubscribe = onSubscribe;
+    callbacks.onBits = onBits;
     callbacks.onChat = onChat;
     callbacks.onRaid = onRaid;
 
@@ -142,6 +152,16 @@ async function start() {
         res.status(200);
         res.send("Complete");
     })
+    app.post("/debug/giftsub", (req: Request, res: Response) => {
+        callbacks.debugGiftSubscribe();
+        res.status(200);
+        res.send("Complete");
+    })
+    app.post("/debug/bits", (req: Request, res: Response) => {
+        callbacks.debugBits();
+        res.status(200);
+        res.send("Complete");
+    })
 
     function onFollow(follow: HelixFollow) {
         sockets = sockets.filter(socket => socket.readyState === 1);
@@ -165,6 +185,16 @@ async function start() {
             socket.send(JSON.stringify({
                 type: "SUBSCRIBE",
                 payload: subscriptionEvent
+            }));
+        });
+    }
+
+    function onBits(bitsEvent: BitsEvent) {
+        sockets = sockets.filter(socket => socket.readyState === 1);
+        sockets.forEach(socket => {
+            socket.send(JSON.stringify({
+                type: "BITS",
+                payload: bitsEvent
             }));
         });
     }
