@@ -36,7 +36,6 @@ const FollowerBox: React.FunctionComponent<Props> = ({user, fps}: Props) => {
     })
 
     return <>
-        }/>
         <div className="followerGoldie" style={{
             display: "flex",
             flexDirection: "row",
