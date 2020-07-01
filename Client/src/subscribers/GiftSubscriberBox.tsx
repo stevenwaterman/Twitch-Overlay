@@ -7,25 +7,17 @@ import "./subscribe.css";
 import Sound from "react-sound";
 import {say} from "../tts";
 
-type Props = { user: string; message: ChatMessage | null ; fps: number };
+type Props = { giver: string; recipient: string; fps: number };
 
 const confettiScale = 20;
 
-const SubscriberBox: React.FunctionComponent<Props> = ({user, message, fps}: Props) => {
+const GiftSubscriberBox: React.FunctionComponent<Props> = ({giver, recipient, fps}: Props) => {
     const {width, height} = useWindowSize();
     const dispatch = useAppDispatch();
 
-    useEffect(() => {
-        setTimeout(() => {
-            if(message !== null) {
-                say(message.message)
-            }
-        }, 11000)
-    }, [message])
-
     return <>
         <Sound playFromPosition={-500} playStatus="PLAYING" url="/sounds/subscriberAlert.wav" onFinishedPlaying={() => {
-            dispatch(clearSubscribeAction(user));
+            dispatch(clearSubscribeAction());
         }
         }/>
         <div className="subscriberGoldie" style={{
@@ -48,11 +40,33 @@ const SubscriberBox: React.FunctionComponent<Props> = ({user, message, fps}: Pro
                     <img src="/images/goldie-crown-sign.svg" alt="Goldie!"/>
                     <div style={{
                         position: "absolute",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        textAlign: "center",
+                        wordWrap: "break-word",
+                        fontFamily: "Minecraft-Regular",
+                        fontSize: "28pt",
+                        width: 280,
+                        left: 30,
+                        top: 90
+                    }}>{giver}
+                    </div>
+                    <div style={{
+                        position: "absolute",
                         fontFamily: "Minecraft-Regular",
                         fontSize: "20pt",
-                        left: 5,
-                        top: 90
-                    }}>Thanks for subscribing,
+                        left: 85,
+                        top: 145
+                    }}>Gifted a sub
+                    </div>
+                    <div style={{
+                        position: "absolute",
+                        fontFamily: "Minecraft-Regular",
+                        fontSize: "20pt",
+                        left: 150,
+                        top: 180
+                    }}>to
                     </div>
                     <div style={{
                         position: "absolute",
@@ -64,10 +78,9 @@ const SubscriberBox: React.FunctionComponent<Props> = ({user, message, fps}: Pro
                         fontFamily: "Minecraft-Regular",
                         fontSize: "28pt",
                         width: 280,
-                        height: 120,
                         left: 30,
-                        top: 130
-                    }}>{user}!
+                        top: 210
+                    }}>{recipient}!
                     </div>
                 </div>
             </div>
@@ -87,10 +100,7 @@ const SubscriberBox: React.FunctionComponent<Props> = ({user, message, fps}: Pro
             initialVelocityY={1200 / fps}
             width={width}
             height={height}
-            tweenFunction={((currentTime, currentValue, targetValue) => {
-                console.log(currentTime);
-                return currentTime < 1000 ? 0 : Math.min(currentValue + 5, targetValue)
-            })}
+            tweenFunction={(currentTime, currentValue, targetValue) => currentTime < 1000 ? 0 : Math.min(currentValue + 5, targetValue)}
             confettiSource={{
                 x: width / 2,
                 y: height / 2 - 40,
@@ -112,4 +122,4 @@ const SubscriberBox: React.FunctionComponent<Props> = ({user, message, fps}: Pro
     </>
 }
 
-export default SubscriberBox;
+export default GiftSubscriberBox;

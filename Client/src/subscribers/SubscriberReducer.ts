@@ -37,7 +37,7 @@ type SubscriberState = {
 }
 
 export const subscribeAction = createAction<SubEvent, "SUBSCRIBE">("SUBSCRIBE")
-export const clearSubscribeAction = createAction<string, "CLEAR_SUBSCRIBE">("CLEAR_SUBSCRIBE");
+export const clearSubscribeAction = createAction<void, "CLEAR_SUBSCRIBE">("CLEAR_SUBSCRIBE");
 
 const initialState: SubscriberState = {
     queue: [],

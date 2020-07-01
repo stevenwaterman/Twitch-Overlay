@@ -1,8 +1,9 @@
 import {useSelector} from "react-redux";
 import {RootState} from "../root/RootReducer";
-import SubscriberBox from "./SubscriberBox";
+import SelfSubscriberBox from "./SelfSubscriberBox";
 import React from "react";
 import {useLocation} from "react-use";
+import GiftSubscriberBox from "./GiftSubscriberBox";
 
 type Props = {};
 const SubscriberContainer: React.FunctionComponent<Props> = () => {
@@ -13,7 +14,11 @@ const SubscriberContainer: React.FunctionComponent<Props> = () => {
     if(sub == null) return null;
     console.log(sub);
 
-    return <SubscriberBox key={sub.userId} user={sub.userDisplayName} message={sub.context === "sub" || sub.context === "resub" ? sub.subMessage : null} fps={fps}/>
+    if(sub.context === "subgift" || sub.context === "anonsubgift") {
+        return <GiftSubscriberBox key={sub.userId} recipient={sub.recipientDisplayName} giver={sub.userDisplayName} fps={fps}/>
+    } else {
+        return <SelfSubscriberBox key={sub.userId} user={sub.userDisplayName} message={sub.context === "sub" || sub.context === "resub" ? sub.subMessage : null} fps={fps}/>
+    }
 }
 
 export default SubscriberContainer;

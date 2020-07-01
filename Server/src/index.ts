@@ -31,6 +31,7 @@ export type Callbacks = {
     onRaid: (raid: RaidEvent) => void;
     debugFollow: () => void;
     debugSubscribe: () => void;
+    debugGiftSubscribe: () => void;
     debugChat: () => void;
     debugRaid: () => void;
 }
@@ -48,6 +49,8 @@ function initCallbacks(): Callbacks {
         debugFollow: () => {
         },
         debugSubscribe: () => {
+        },
+        debugGiftSubscribe: () => {
         },
         debugChat: () => {
         },
@@ -139,6 +142,11 @@ async function start() {
     })
     app.post("/debug/sub", (req: Request, res: Response) => {
         callbacks.debugSubscribe();
+        res.status(200);
+        res.send("Complete");
+    })
+    app.post("/debug/giftsub", (req: Request, res: Response) => {
+        callbacks.debugGiftSubscribe();
         res.status(200);
         res.send("Complete");
     })
