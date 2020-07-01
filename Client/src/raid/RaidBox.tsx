@@ -2,28 +2,12 @@ import React, {useEffect} from "react";
 import "./raid.css"
 import {useAppDispatch} from "../root/RootStore";
 import {clearRaidAction} from "./RaidReducer";
+import {play} from "../audio";
 
 type Props = {
     displayName: string;
     viewerCount: number;
 }
-
-const ctx = new AudioContext();
-const volume = ctx.createGain();
-volume.connect(ctx.destination);
-const warVolume = ctx.createGain();
-warVolume.gain.value = 0.5;
-warVolume.connect(ctx.destination);
-
-const meowBuffers: AudioBuffer[] = [];
-new Array(22).fill(null).forEach(async (_, idx) => {
-    const arrayBuffer = await fetch(`/meows/${idx + 1}.wav`).then(res => res.arrayBuffer())
-    const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
-    meowBuffers.push(audioBuffer);
-});
-
-let warBuffer: AudioBuffer | null = null;
-fetch("/sounds/raidAlert.wav").then(res => res.arrayBuffer()).then(res => ctx.decodeAudioData(res)).then(res => warBuffer = res);
 
 /**
  * 0-1, more centered if iter increased
@@ -33,7 +17,7 @@ function gaussRandom(iter: number): number {
 }
 
 const RaidBox: React.FunctionComponent<Props> = ({displayName, viewerCount}: Props) => {
-    const goldieCount = Math.max(viewerCount, 1000);
+    const goldieCount = Math.min(viewerCount, 1000);
     const goldieLeft: number[] = new Array(goldieCount).fill(null).map(() => -(8 * goldieCount + 1000) * gaussRandom(2));
     const goldieBottom: number[] = new Array(goldieCount).fill(null).map(() => (goldieCount + 50) * (gaussRandom(5) - 0.5) + 50);
     const minGoldieLeft = Math.min(...goldieLeft, 0);
@@ -42,22 +26,11 @@ const RaidBox: React.FunctionComponent<Props> = ({displayName, viewerCount}: Pro
     const duration = (-minGoldieLeft) + 10000;
     const delay = 15000-Math.min(15000, duration);
 
-    const warSource = ctx.createBufferSource();
-    warSource.buffer = warBuffer;
-    warSource.connect(warVolume);
-    warSource.start(ctx.currentTime);
 
-    volume.gain.value = 0.1 + 0.9/Math.max(1, goldieCount);
+    play("raidAlert", {volume: 0.5})
 
-    const sources: AudioBufferSourceNode[] = new Array(goldieCount).fill(null).map(() => {
-        const source = ctx.createBufferSource();
-        const meowIdx = Math.floor(Math.random() * meowBuffers.length);
-        source.buffer = meowBuffers[meowIdx];
-        source.loop = true;
-        source.detune.value = 1000 * (gaussRandom(2) - 0.5);
-        source.connect(volume);
-        return source;
-    })
+    const volume = 0.1 + 0.9/Math.max(1, goldieCount);
+
 
     const dispatch = useAppDispatch();
     useEffect(() => {
@@ -76,10 +49,8 @@ const RaidBox: React.FunctionComponent<Props> = ({displayName, viewerCount}: Pro
     }}>
         {new Array(goldieCount).fill(null).map((_, idx) => {
             const left = goldieLeft[idx];
-            const source = sources[idx];
-            const startAt = ((0.5*duration)/1000)*(-(minGoldieLeft - left)/goldieLeftRange)+(0.5*duration/1000)+(delay/1000);
-            source.start(ctx.currentTime + startAt);
-            source.stop(ctx.currentTime + startAt + 5);
+            const meowIdx = Math.floor(Math.random() * 22) + 1;
+            play("meows/" + meowIdx as any, {volume: volume, loop: true, detune: 1000 * (gaussRandom(2) - 0.5), start: ((0.5*duration)/1000)*(-(minGoldieLeft - left)/goldieLeftRange)+(0.5*duration/1000)+(delay/1000), duration: 5});
 
             return <img className="smallGoldie" key={idx} style={{
                 position: "absolute",

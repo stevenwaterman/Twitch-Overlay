@@ -1,11 +1,10 @@
 import React, {useEffect} from "react";
 import Confetti from "react-confetti";
 import useWindowSize from "react-use/lib/useWindowSize";
-import {ChatMessage, clearSubscribeAction} from "./SubscriberReducer";
+import {clearSubscribeAction} from "./SubscriberReducer";
 import {useAppDispatch} from "../root/RootStore";
 import "./subscribe.css";
-import Sound from "react-sound";
-import {say} from "../tts";
+import {play} from "../audio";
 
 type Props = { giver: string; recipient: string; fps: number };
 
@@ -15,11 +14,14 @@ const GiftSubscriberBox: React.FunctionComponent<Props> = ({giver, recipient, fp
     const {width, height} = useWindowSize();
     const dispatch = useAppDispatch();
 
-    return <>
-        <Sound playFromPosition={-500} playStatus="PLAYING" url="/sounds/subscriberAlert.wav" onFinishedPlaying={() => {
+    useEffect(() => {
+        const duration = play("subscriberAlert", {start: 0.5});
+        setTimeout(() => {
             dispatch(clearSubscribeAction());
-        }
-        }/>
+        }, duration);
+    })
+
+    return <>
         <div className="subscriberGoldie" style={{
             display: "flex",
             flexDirection: "row",

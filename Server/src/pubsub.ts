@@ -1,6 +1,6 @@
 import {Callbacks, ENV} from "./index";
 import TwitchClient, {HelixUser} from "twitch";
-import PubSubClient, {PubSubSubscriptionMessage} from "twitch-pubsub-client";
+import PubSubClient, {PubSubBitsMessage, PubSubSubscriptionMessage} from "twitch-pubsub-client";
 
 export type MessageInfo = {
     userName: string;
@@ -34,9 +34,19 @@ export type SubGiftDetail = {
 }
 export type SubEvent = MessageInfo & (SubDetail | SubGiftDetail);
 
+export type BitsEvent = {
+    bits: number,
+    totalBits: number,
+    isAnonymous: boolean,
+    message: string,
+    userId: string,
+    userName: string
+}
+
 export async function initPubSub(callbacks: Callbacks, twitchClient: TwitchClient, user: HelixUser, {}: ENV): Promise<Callbacks> {
     const client = new PubSubClient();
     await client.registerUserListener(twitchClient, user);
+
     await client.onSubscription(user, (subscription: PubSubSubscriptionMessage) => {
         console.log("Subscription from " + subscription.userDisplayName);
         const messageInfo: MessageInfo = {
@@ -65,6 +75,19 @@ export async function initPubSub(callbacks: Callbacks, twitchClient: TwitchClien
         }
 
         callbacks.onSubscribe(subEvent);
+    })
+
+    await client.onBits(user, async (bits: PubSubBitsMessage) => {
+        const user = bits.isAnonymous ? null : await bits.getUser();
+        const displayName = user === null ? bits.userName : user.displayName;
+        callbacks.onBits({
+            bits: bits.bits,
+            isAnonymous: bits.isAnonymous,
+            message: bits.message,
+            totalBits: bits.totalBits,
+            userId: displayName || "Anonymous",
+            userName: "Anonymous"
+        })
     })
 
     callbacks.debugSubscribe = () => {
@@ -99,6 +122,18 @@ export async function initPubSub(callbacks: Callbacks, twitchClient: TwitchClien
             time: new Date(),
             subPlan: "1000"
         })
+    }
+
+    callbacks.debugBits = () => {
+        console.log("Debug Bits");
+        callbacks.onBits({
+            isAnonymous: false,
+            userId: user.id,
+            userName: user.displayName,
+            message: "Corgo100",
+            bits: 100,
+            totalBits: 500
+        });
     }
 
     return callbacks;

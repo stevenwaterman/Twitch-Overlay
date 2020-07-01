@@ -4,8 +4,8 @@ import useWindowSize from "react-use/lib/useWindowSize";
 import {ChatMessage, clearSubscribeAction} from "./SubscriberReducer";
 import {useAppDispatch} from "../root/RootStore";
 import "./subscribe.css";
-import Sound from "react-sound";
 import {say} from "../tts";
+import {play} from "../audio";
 
 type Props = { user: string; message: ChatMessage | null ; fps: number };
 
@@ -23,11 +23,14 @@ const SelfSubscriberBox: React.FunctionComponent<Props> = ({user, message, fps}:
         }, 11000)
     }, [message])
 
-    return <>
-        <Sound playFromPosition={-500} playStatus="PLAYING" url="/sounds/subscriberAlert.wav" onFinishedPlaying={() => {
+    useEffect(() => {
+        const duration = play("subscriberAlert", {start: 0.5});
+        setTimeout(() => {
             dispatch(clearSubscribeAction());
-        }
-        }/>
+        }, duration);
+    })
+
+    return <>
         <div className="subscriberGoldie" style={{
             display: "flex",
             flexDirection: "row",
@@ -65,7 +68,7 @@ const SelfSubscriberBox: React.FunctionComponent<Props> = ({user, message, fps}:
                         fontSize: "28pt",
                         width: 280,
                         left: 30,
-                        top: 120
+                        top: 150
                     }}>{user}
                     </div>
                     <div style={{

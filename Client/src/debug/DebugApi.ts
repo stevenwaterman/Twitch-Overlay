@@ -19,3 +19,7 @@ export async function debugSubRequest() {
 export async function debugGiftSubRequest() {
     return axios.post(`http://${process.env.REACT_APP_SERVER_IP}/debug/giftsub`);
 }
+
+export async function debugBitsRequest() {
+    return axios.post(`http://${process.env.REACT_APP_SERVER_IP}/debug/bits`);
+}

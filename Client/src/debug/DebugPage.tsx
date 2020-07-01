@@ -1,6 +1,12 @@
 import React from "react";
-import {debugFollowRequest, debugChatRequest, debugRaidRequest, debugSubRequest, debugGiftSubRequest} from "./DebugApi";
-
+import {
+    debugFollowRequest,
+    debugChatRequest,
+    debugRaidRequest,
+    debugSubRequest,
+    debugGiftSubRequest,
+    debugBitsRequest
+} from "./DebugApi";
 
 const DebugPage: React.FunctionComponent = () => {
     return <>
@@ -8,6 +14,7 @@ const DebugPage: React.FunctionComponent = () => {
         <button onClick={debugRaidRequest}>Fake Raid</button>
         <button onClick={debugSubRequest}>Fake Sub</button>
         <button onClick={debugGiftSubRequest}>Fake Gift Sub</button>
+        <button onClick={debugBitsRequest}>Fake Bits</button>
         <button onClick={debugChatRequest}>Real Chat</button>
     </>
 }
