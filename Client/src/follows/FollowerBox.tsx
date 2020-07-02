@@ -16,22 +16,13 @@ const FollowerBox: React.FunctionComponent<Props> = ({user, fps}: Props) => {
 
     let soundDone = false;
     let confettiDone = false;
-    let goldieDone = false;
-
-    useEffect(() => {
-        setTimeout(() => {
-            // eslint-disable-next-line
-            goldieDone = true;
-            if(soundDone && confettiDone) dispatch(clearFollowAction(user));
-        }, 5000);
-    }, [user])
 
     useEffect(() => {
         const duration = play("followerAlert", {start: 0.5})
         setTimeout(() => {
             // eslint-disable-next-line react-hooks/exhaustive-deps
             soundDone = true;
-            if(goldieDone && confettiDone) dispatch(clearFollowAction);
+            if(confettiDone) dispatch(clearFollowAction());
         }, duration);
     })
 
@@ -124,7 +115,7 @@ const FollowerBox: React.FunctionComponent<Props> = ({user, fps}: Props) => {
             recycle={false}
             onConfettiComplete={() => {
                 confettiDone = true;
-                if(goldieDone && soundDone) dispatch(clearFollowAction(user));
+                if(soundDone) dispatch(clearFollowAction());
             }}
         />
     </>

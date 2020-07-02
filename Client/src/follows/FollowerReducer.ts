@@ -8,7 +8,7 @@ type FollowerState = {
 }
 
 export const followAction = createAction<HelixFollow, "FOLLOW">("FOLLOW")
-export const clearFollowAction = createAction<string, "CLEAR_FOLLOW">("CLEAR_FOLLOW");
+export const clearFollowAction = createAction<void, "CLEAR_FOLLOW">("CLEAR_FOLLOW");
 
 const initialState: FollowerState = {
     queue: [],
@@ -22,6 +22,7 @@ builder.addCase(followAction, (state, {payload}) => {
         state.queue.push(payload);
     }
 }).addCase(clearFollowAction, (state) => {
+    console.log("Clearing");
     if(state.queue.length > 0) {
         state.current = state.queue.pop() as UserFollow;
     } else {
