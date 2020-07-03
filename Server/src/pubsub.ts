@@ -56,18 +56,18 @@ export async function initPubSub(callbacks: Callbacks, twitchClient: TwitchClien
             userDisplayName: subscription.isGift ? (subscription.isAnonymous ? subscription.gifterDisplayName as string : "Anonymous") : subscription.userDisplayName,
         }
         const subDetail: SubDetail | SubGiftDetail = subscription.isGift ? {
-            context: subscription.isResub ? "resub" : "sub",
-            subPlan: subscription.subPlan,
-            cumulativeMonths: subscription.cumulativeMonths,
-            streakMonths: subscription.streakMonths,
-            subMessage: subscription.message
-        } : {
             context: subscription.isAnonymous ? "anonsubgift" : "subgift",
             subPlan: subscription.subPlan as "1000" | "2000" | "3000",
             months: subscription.months,
             recipientDisplayName: subscription.userDisplayName,
             recipientId: subscription.userId,
             recipientUserName: subscription.userName,
+        } : {
+            context: subscription.isResub ? "resub" : "sub",
+            subPlan: subscription.subPlan,
+            cumulativeMonths: subscription.cumulativeMonths,
+            streakMonths: subscription.streakMonths,
+            subMessage: subscription.message
         }
         const subEvent: SubEvent = {
             ...messageInfo,

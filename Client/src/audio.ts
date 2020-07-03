@@ -53,7 +53,8 @@ export function play(sound: AudioPath, {start, offset, duration, volume, loop, d
         sourceNode.connect(gainNode);
         gainNode.connect(ctx.destination);
     }
-    sourceNode.start(start === undefined ? undefined : start + ctx.currentTime, offset, duration);
+    const realStart = start === undefined ? undefined : start + ctx.currentTime;
+    sourceNode.start(realStart, offset || 0, duration);
     if (duration !== undefined) {
         sourceNode.stop((start === undefined ? ctx.currentTime : start) + duration);
     }

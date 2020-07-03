@@ -97,7 +97,6 @@ const BitsBox: React.FunctionComponent<Props> = ({id, user, bits, message, fps}:
             tweenFunction={(currentTime, currentValue, targetValue) => {
                 if (currentTime < 2500) return 0;
                 const fraction = (currentTime-2500)/5500;
-                console.log(currentTime);
                 setBitsDisplay(fraction * bits);
                 return fraction * targetValue;
             }}
