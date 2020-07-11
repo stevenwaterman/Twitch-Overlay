@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from "react";
-import {ChatEvent, removeChat} from "../chatAlerts/ChatReducer";
+import {ChatEvent, removeChat, TwitchEmote} from "../chatAlerts/ChatReducer";
 import "./chat.css";
 import {useAppDispatch} from "../root/RootStore";
 import Badge from "./Badge";
 import EmoteComponent from "./Emote";
-import {TwitchEmoteList} from "dank-twitch-irc";
 import { CSSTransition } from 'react-transition-group';
 
 type Props = {
@@ -54,7 +53,7 @@ type EmoteToken = {
 
 type Token = TextToken | EmoteToken;
 
-function tokenise(text: string, emotes: TwitchEmoteList): Array<Token["content"]> {
+function tokenise(text: string, emotes: TwitchEmote[]): Array<Token["content"]> {
     const emoteTokens: EmoteToken[] = [];
     emotes.forEach(emote => {
         emoteTokens.push({
