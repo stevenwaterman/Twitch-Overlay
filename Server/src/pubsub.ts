@@ -51,9 +51,9 @@ export async function initPubSub(callbacks: Callbacks, twitchClient: TwitchClien
         console.log("Subscription from " + subscription.userDisplayName);
         const messageInfo: MessageInfo = {
             time: subscription.time,
-            userId: subscription.isGift ? (subscription.isAnonymous ? subscription.gifterId as string : "Anonymous") : subscription.userId,
-            userName: subscription.isGift ? (subscription.isAnonymous ? subscription.gifterName as string : "Anonymous") : subscription.userName,
-            userDisplayName: subscription.isGift ? (subscription.isAnonymous ? subscription.gifterDisplayName as string : "Anonymous") : subscription.userDisplayName,
+            userId: subscription.isGift ? (subscription.isAnonymous ? "Anonymous" : subscription.gifterId as string) : subscription.userId,
+            userName: subscription.isGift ? (subscription.isAnonymous ? "Anonymous" : subscription.gifterName as string) : subscription.userName,
+            userDisplayName: subscription.isGift ? (subscription.isAnonymous ? "Anonymous" : subscription.gifterDisplayName as string) : subscription.userDisplayName,
         }
         const subDetail: SubDetail | SubGiftDetail = subscription.isGift ? {
             context: subscription.isAnonymous ? "anonsubgift" : "subgift",
@@ -115,7 +115,7 @@ export async function initPubSub(callbacks: Callbacks, twitchClient: TwitchClien
             months: 1,
             recipientDisplayName: "Recipient",
             recipientId: user.id,
-            recipientUserName: "recipied",
+            recipientUserName: "recipient",
             userDisplayName: "Giver",
             userId: user.id,
             userName: "giver",

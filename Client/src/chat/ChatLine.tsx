@@ -16,8 +16,8 @@ const ChatLine: React.FunctionComponent<Props> = ({message}: Props) => {
     const dispatch = useAppDispatch();
     const [show, setShow] = useState(false);
 
-    const {colorRaw, displayName, messageText, badges, emotes} = message;
-    const userColor = colorRaw === undefined || colorRaw.length === 0 ? defaultColors[displayName.charCodeAt(0) % 15] : colorRaw;
+    const {color, displayName, messageText, badges, emotes} = message;
+    const userColor = color === undefined || color.length === 0 ? defaultColors[displayName.charCodeAt(0) % 15] : color;
     useEffect(() => {
         setTimeout(() => {
             setShow(false);
@@ -25,7 +25,7 @@ const ChatLine: React.FunctionComponent<Props> = ({message}: Props) => {
         }, 10*1000)
     })
 
-    useEffect(() => setShow(true), [message.messageID]);
+    useEffect(() => setShow(true), []);
     const chatLineRef = React.createRef<HTMLDivElement>();
 
     return <CSSTransition mountOnEnter unmountOnExit in={show} onExited={() => dispatch(removeChat())} timeout={200} classNames={"chat_line"} nodeRef={chatLineRef}>

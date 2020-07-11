@@ -1,9 +1,7 @@
 import {createAction, createReducer} from "@reduxjs/toolkit";
 type RaidEvent = {
     displayName: string,
-    login: string,
-    viewerCount: number,
-    serverTimestamp: Date
+    viewerCount: number
 }
 type RaidState = {
     current: RaidEvent | null;

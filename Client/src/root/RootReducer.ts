@@ -4,9 +4,11 @@ import subscriberReducer from "../subscribers/SubscriberReducer";
 import bitsReducer from "../bits/BitsReducer";
 import chatReducer from "../chatAlerts/ChatReducer";
 import raidReducer from "../raid/RaidReducer";
+import hostReducer from "../hosts/HostReducer";
 
 const rootReducer = combineReducers({
     follower: followerReducer,
+    host: hostReducer,
     subscriber: subscriberReducer,
     bits: bitsReducer,
     chat: chatReducer,

@@ -8,7 +8,7 @@ const ChatAlertsContainer: React.FunctionComponent<Props> = () => {
     const chat = useSelector((state: RootState) => state.chat.current);
     if(chat == null) return null;
 
-    return <ChatAlerts key={chat.messageID} displayName={chat.displayName} messageText={chat.messageText}/>
+    return <ChatAlerts displayName={chat.displayName} messageText={chat.messageText}/>
 }
 
 export default ChatAlertsContainer;

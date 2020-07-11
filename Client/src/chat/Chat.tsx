@@ -22,7 +22,7 @@ const Chat: React.FunctionComponent = () => {
             width: `${100/scale}%`,
             height: `${100/scale}%`,
         }}>
-            {messages.map(message => <ChatLine key={message.messageID} message={message}/>)}
+            {messages.map(message => <ChatLine message={message}/>)}
         </div>
     </div>
 }

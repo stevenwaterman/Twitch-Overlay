@@ -4,8 +4,6 @@ import LogLevel from "@d-fischer/logger/lib/LogLevel";
 import {Callbacks, ENV} from "./index";
 
 export async function initHooks(callbacks: Callbacks, twitchClient: TwitchClient, user: HelixUser, {}: ENV): Promise<Callbacks> {
-
-
     const portString: string | undefined = process.env.WEBHOOK_PORT;
     if (portString === undefined) throw("port null");
     const port = parseInt(portString);

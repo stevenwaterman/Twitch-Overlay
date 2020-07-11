@@ -1,31 +1,29 @@
 import {ActionCreatorWithPayload, createAction, createReducer} from "@reduxjs/toolkit";
-import {TwitchBadgesList} from "dank-twitch-irc/lib/message/badges";
-import {Color} from "dank-twitch-irc/lib/message/color";
-import {TwitchEmoteList} from "dank-twitch-irc/lib/message/emotes";
+
+export type ChatBadge = {
+    name: string;
+    version: string;
+}
+
+export type TwitchEmote = {
+    id: string;
+    startIndex: number;
+    endIndex: number;
+    code: string;
+}
 
 export type ChatEvent = {
     messageText: string;
-    isAction: boolean;
     senderUsername: string;
     senderUserID: string;
-    badgeInfo: TwitchBadgesList;
-    badgeInfoRaw: string;
-    badges: TwitchBadgesList;
-    badgesRaw: string;
+    badges: Array<ChatBadge>;
     bits: number | undefined;
-    bitsRaw: string | undefined;
-    color: Color | undefined;
-    colorRaw: string;
+    color: string | undefined;
     displayName: string;
-    emotes: TwitchEmoteList;
-    emotesRaw: string;
-    messageID: string;
+    emotes: Array<TwitchEmote>;
     isMod: boolean;
-    isModRaw: string;
-    channelID: string;
-    serverTimestamp: Date;
-    serverTimestampRaw: string;
 };
+
 type ChatState = {
     current: ChatEvent | null;
     history: ChatEvent[];
