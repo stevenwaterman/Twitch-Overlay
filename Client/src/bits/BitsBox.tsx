@@ -54,7 +54,7 @@ const BitsBox: React.FunctionComponent<Props> = ({id, user, bits, message, fps}:
                         textAlign: "center",
                         width: "100%",
                         top: 250
-                    }}>{user} just cheered with
+                    }}>{user} just cheered
                     </div>
                     <div style={{
                         position: "absolute",

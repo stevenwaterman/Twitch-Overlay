@@ -2,13 +2,12 @@ import express, {Request, Response} from "express";
 import expressWS from "express-ws";
 import {initHooks} from "./hooks";
 import * as ws from 'ws';
-import {initChat} from "./irc";
+import {initChat} from "./chat";
 import fs from "fs";
-import {PrivmsgMessage, UsernoticeMessage} from "dank-twitch-irc";
-import TwitchClient, {HelixFollow, HelixSubscriptionEvent, HelixUser} from "twitch";
+import TwitchClient, {HelixFollow, HelixUser} from "twitch";
 import LogLevel from "@d-fischer/logger/lib/LogLevel";
 import {BitsEvent, initPubSub, SubEvent} from "./pubsub";
-import {PubSubSubscriptionMessage} from "twitch-pubsub-client";
+import {ChatRaidInfo} from "twitch-chat-client";
 
 export type ENV = {
     channelName: string
@@ -17,24 +16,49 @@ export type ENV = {
     refreshToken: string
 }
 
-export type RaidEvent = {
-    displayName: string,
-    login: string,
-    viewerCount: number,
-    serverTimestamp: Date
+export type HostEvent = {
+    channel: string,
+    viewers: number,
+    auto: boolean
 }
+
+export type ChatBadge = {
+    name: string;
+    version: string;
+}
+
+export type TwitchEmote = {
+    id: string;
+    startIndex: number;
+    endIndex: number;
+    code: string;
+}
+
+export type ChatEvent = {
+    messageText: string;
+    senderUsername: string;
+    senderUserID: string;
+    badges: Array<ChatBadge>;
+    bits: number | undefined;
+    color: string | undefined;
+    displayName: string;
+    emotes: Array<TwitchEmote>;
+    isMod: boolean;
+};
 
 export type Callbacks = {
     onFollow: (follow: HelixFollow) => void;
     onSubscribe: (subscriptionEvent: SubEvent) => void;
     onBits: (bitsEvent: BitsEvent) => void;
-    onChat: (chat: PrivmsgMessage) => void;
-    onRaid: (raid: RaidEvent) => void;
+    onChat: (chat: ChatEvent) => void;
+    onHost: (host: HostEvent) => void;
+    onRaid: (raid: ChatRaidInfo) => void;
     debugFollow: () => void;
     debugSubscribe: () => void;
     debugGiftSubscribe: () => void;
     debugBits: () => void;
     debugChat: () => void;
+    debugHost: () => void;
     debugRaid: () => void;
 }
 
@@ -48,6 +72,8 @@ function initCallbacks(): Callbacks {
         },
         onChat: () => {
         },
+        onHost: () => {
+        },
         onRaid: () => {
         },
         debugFollow: () => {
@@ -59,6 +85,8 @@ function initCallbacks(): Callbacks {
         debugGiftSubscribe: () => {
         },
         debugChat: () => {
+        },
+        debugHost: () => {
         },
         debugRaid: () => {
         }
@@ -104,19 +132,29 @@ async function initAll(): Promise<Callbacks> {
     }
 
     let callbacks = initCallbacks();
+    console.log("Init Hooks")
     callbacks = await initHooks(callbacks, twitchClient, user, env);
+    console.log("Init Hooks Done")
+
+    console.log("Init Pubsub")
     callbacks = await initPubSub(callbacks, twitchClient, user, env);
-    callbacks = await initChat(callbacks, env);
+    console.log("Init Pubsub done")
+
+    console.log("Init Chat")
+    callbacks = await initChat(callbacks, twitchClient, env);
+    console.log("Init Chat done")
+
     return callbacks;
 }
 
 async function start() {
-    const callbacks = await initAll();
+    const callbacks: Callbacks = await initAll();
     callbacks.onFollow = onFollow;
-    callbacks.onSubscribe = onSubscribe;
-    callbacks.onBits = onBits;
-    callbacks.onChat = onChat;
-    callbacks.onRaid = onRaid;
+    callbacks.onSubscribe = (event) => send("SUBSCRIBE", event);
+    callbacks.onBits = (event) => send("BITS", event);
+    callbacks.onChat = (event) => send("CHAT", event);
+    callbacks.onHost = (event) => send("HOST", event);
+    callbacks.onRaid = (event) => send("RAID", event);
 
     const _app = express();
     const {app} = expressWS(_app);
@@ -142,6 +180,11 @@ async function start() {
         res.status(200);
         res.send("Complete");
     });
+    app.post("/debug/host", (req: Request, res: Response) => {
+        callbacks.debugHost();
+        res.status(200);
+        res.send("Complete");
+    })
     app.post("/debug/raid", (req: Request, res: Response) => {
         callbacks.debugRaid();
         res.status(200);
@@ -163,59 +206,23 @@ async function start() {
         res.send("Complete");
     })
 
-    function onFollow(follow: HelixFollow) {
+    function send(type: string, payload: any) {
         sockets = sockets.filter(socket => socket.readyState === 1);
         sockets.forEach(socket => {
             socket.send(JSON.stringify({
-                type: "FOLLOW",
-                payload: {
-                    userDisplayName: follow.userDisplayName,
-                    userId: follow.userId,
-                    followedUserDisplayName: follow.followedUserDisplayName,
-                    followedUserId: follow.followedUserId,
-                    followDate: follow.followDate
-                }
+                type,
+                payload
             }));
         })
     }
 
-    function onSubscribe(subscriptionEvent: SubEvent) {
-        sockets = sockets.filter(socket => socket.readyState === 1);
-        sockets.forEach(socket => {
-            socket.send(JSON.stringify({
-                type: "SUBSCRIBE",
-                payload: subscriptionEvent
-            }));
-        });
-    }
-
-    function onBits(bitsEvent: BitsEvent) {
-        sockets = sockets.filter(socket => socket.readyState === 1);
-        sockets.forEach(socket => {
-            socket.send(JSON.stringify({
-                type: "BITS",
-                payload: bitsEvent
-            }));
-        });
-    }
-
-    function onChat(chatEvent: PrivmsgMessage) {
-        sockets = sockets.filter(socket => socket.readyState === 1);
-        sockets.forEach(socket => {
-            socket.send(JSON.stringify({
-                type: "CHAT",
-                payload: chatEvent
-            }));
-        });
-    }
-
-    function onRaid(raidEvent: RaidEvent) {
-        sockets = sockets.filter(socket => socket.readyState === 1);
-        sockets.forEach(socket => {
-            socket.send(JSON.stringify({
-                type: "RAID",
-                payload: raidEvent
-            }));
+    function onFollow(follow: HelixFollow) {
+        send("FOLLOW", {
+            userDisplayName: follow.userDisplayName,
+            userId: follow.userId,
+            followedUserDisplayName: follow.followedUserDisplayName,
+            followedUserId: follow.followedUserId,
+            followDate: follow.followDate
         });
     }
 }

@@ -3,6 +3,7 @@ const paths = [
     "followerAlert",
     "raidAlert",
     "subscriberAlert",
+    "hostAlert",
     "meows/1",
     "meows/2",
     "meows/3",
