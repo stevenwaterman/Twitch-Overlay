@@ -5,9 +5,8 @@ import * as ws from 'ws';
 import {initChat} from "./chat";
 import fs from "fs";
 import TwitchClient, {HelixFollow, HelixUser} from "twitch";
-import LogLevel from "@d-fischer/logger/lib/LogLevel";
 import {BitsEvent, initPubSub, SubEvent} from "./pubsub";
-import {ChatRaidInfo} from "twitch-chat-client";
+import {ChatRaidInfo, LogLevel} from "twitch-chat-client";
 
 export type ENV = {
     channelName: string
@@ -121,9 +120,7 @@ async function initAll(): Promise<Callbacks> {
     console.log("Try auth");
     const twitchClient = TwitchClient.withCredentials(env.clientId, env.accessToken, [
         "user_read", "user_blocks_edit", "user_blocks_read", "user_follows_edit", "channel_read", "channel_editor", "channel_commercial", "channel_stream", "channel_subscriptions", "user_subscriptions", "channel_check_subscription", "chat_login", "channel_feed_read", "channel_feed_edit", "collections_edit", "communities_edit", "communities_moderate", "viewing_activity_read", "openid", "analytics:read:extensions", "user:edit", "user:read:email", "clips:edit", "bits:read", "analytics:read:games", "user:edit:broadcast", "user:read:broadcast", "chat:read", "chat:edit", "channel:moderate", "channel:read:subscriptions", "whispers:read", "whispers:edit", "moderation:read", "channel:read:redemptions", "channel:edit:commercial"
-    ], undefined, {
-        logLevel: LogLevel.TRACE
-    });
+    ]);
     console.log("Auth success");
 
     const user: HelixUser | null = await twitchClient.helix.users.getUserByName(env.channelName);
