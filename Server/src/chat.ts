@@ -8,6 +8,8 @@ export async function initChat(callbacks: Callbacks, twitchClient: TwitchClient,
     chatClient.onPrivmsg(((channel, user, message, msg) => {
         console.log("Chat")
 
+
+        msg.parseEmotes()
         const emotes: ParsedMessageEmotePart[] = msg.parseEmotes().filter(emote => emote.type === "emote") as any;
         const mappedEmotes: TwitchEmote[] = emotes.map(emote => ({
             code: emote.name,
