@@ -1,4 +1,4 @@
-FROM node:12
+FROM node:14
 
 COPY ./src ./src
 COPY .babelrc package-lock.json package.json tsconfig.json ./
