@@ -28,6 +28,7 @@ builder.addCase(bitsAction, (state, {payload}) => {
         state.queue.push(payload);
     }
 }).addCase(clearBitsAction, (state) => {
+    console.log("clearing bits")
     if(state.queue.length > 0) {
         state.current = state.queue.pop() as BitsEvent;
     } else {

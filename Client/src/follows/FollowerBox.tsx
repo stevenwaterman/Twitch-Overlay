@@ -14,17 +14,9 @@ const FollowerBox: React.FunctionComponent<Props> = ({user, fps}: Props) => {
     const {width, height} = useWindowSize();
     const dispatch = useAppDispatch();
 
-    let soundDone = false;
-    let confettiDone = false;
-
     useEffect(() => {
-        const duration = play("followerAlert", {start: 0.5})
-        setTimeout(() => {
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-            soundDone = true;
-            if(confettiDone) dispatch(clearFollowAction());
-        }, duration);
-    })
+        play("followerAlert", {start: 0.5})
+    }, [user])
 
     return <>
         <div className="followerGoldie" style={{
@@ -114,8 +106,7 @@ const FollowerBox: React.FunctionComponent<Props> = ({user, fps}: Props) => {
             }}
             recycle={false}
             onConfettiComplete={() => {
-                confettiDone = true;
-                if(soundDone) dispatch(clearFollowAction());
+                setTimeout(() => dispatch(clearFollowAction()), 2000);
             }}
         />
     </>

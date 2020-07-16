@@ -35,7 +35,6 @@ const RaidBox: React.FunctionComponent<Props> = ({displayName, viewerCount}: Pro
     const dispatch = useAppDispatch();
     useEffect(() => {
         setTimeout(() => {
-            console.log("clearing");
             dispatch(clearRaidAction());
         }, duration + delay)
     }, [displayName, duration, dispatch, delay])

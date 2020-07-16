@@ -10,7 +10,7 @@ const RaidContainer: React.FunctionComponent<Props> = () => {
     if(raid == null) return null;
     console.log(raid);
 
-    return <RaidBox key={raid.displayName} displayName={raid.displayName} viewerCount={raid.viewerCount}/>
+    return <RaidBox key={raid.displayName + new Date().toLocaleDateString()} displayName={raid.displayName} viewerCount={raid.viewerCount}/>
 }
 
 export default RaidContainer;

@@ -1,13 +1,14 @@
 import ChatClient, {ParsedMessageEmotePart} from "twitch-chat-client";
 import {Callbacks, ChatBadge, ChatEvent, ENV, TwitchEmote} from "./index";
 import TwitchClient from "twitch";
+import {randomName} from "./utils";
 
 export async function initChat(callbacks: Callbacks, twitchClient: TwitchClient, {channelName}: ENV): Promise<Callbacks> {
     const chatClient = ChatClient.forTwitchClient(twitchClient, {channels: [channelName]})
 
     chatClient.onPrivmsg(((channel, user, message, msg) => {
+        if(msg.userInfo.userName.toLowerCase() == "jtv") return;
         console.log("Chat")
-
 
         msg.parseEmotes()
         const emotes: ParsedMessageEmotePart[] = msg.parseEmotes().filter(emote => emote.type === "emote") as any;
@@ -51,20 +52,32 @@ export async function initChat(callbacks: Callbacks, twitchClient: TwitchClient,
 
     callbacks.debugChat = () => {
         console.log("Debug Chat");
-        chatClient.say(channelName, "This is an automatic debug message! itsami4Goldie");
+        callbacks.onChat({
+            badges: [
+                {name: "partner", version: "1"}
+            ],
+            bits: undefined,
+            color: "#FF0000",
+            displayName: randomName(),
+            emotes: [],
+            isMod: true,
+            messageText: "Yo Yo Yo friendos, this right here is one scripy automated test message",
+            senderUserID: randomName(),
+            senderUsername: randomName()
+        })
     }
 
     callbacks.debugHost = () => {
         console.log("Debug Host");
         callbacks.onHost({
-            channel: channelName, viewers: 10, auto: false
+            channel: randomName(), viewers: 10, auto: false
         })
     }
 
     callbacks.debugRaid = () => {
         console.log("Debug Raid");
         callbacks.onRaid({
-            displayName: channelName, viewerCount: 15
+            displayName: randomName(), viewerCount: 15
         })
     }
 

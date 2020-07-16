@@ -13,7 +13,8 @@ const BitsContainer: React.FunctionComponent<Props> = () => {
     if(bitsEvent == null) return null;
     console.log(bitsEvent);
 
-    return <BitsBox id={new Date().toLocaleDateString() + bitsEvent.userId} key={bitsEvent.userId} bits={bitsEvent.bits} message={bitsEvent.message} user={bitsEvent.userName} fps={fps}/>
+    const id = new Date().toLocaleDateString() + bitsEvent.userId
+    return <BitsBox key={id} id={id} bits={bitsEvent.bits} message={bitsEvent.message} user={bitsEvent.userName} fps={fps}/>
 }
 
 export default BitsContainer;

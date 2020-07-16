@@ -14,18 +14,10 @@ const BitsBox: React.FunctionComponent<Props> = ({id, user, bits, message, fps}:
     const {width, height} = useWindowSize();
     const dispatch = useAppDispatch();
 
-    let soundDone = false;
-    let confettiDone = false;
-
     const [bitsDisplay, setBitsDisplay] = useState(0);
 
     useEffect(() => {
-        const duration = play("bitsAlert");
-        setTimeout(() => {
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-            soundDone = true;
-            if(confettiDone) dispatch(clearBitsAction());
-        }, duration)
+        play("bitsAlert");
     }, [id])
 
     return <>
@@ -111,8 +103,7 @@ const BitsBox: React.FunctionComponent<Props> = ({id, user, bits, message, fps}:
             }}
             recycle={false}
             onConfettiComplete={() => {
-                confettiDone = true;
-                if(soundDone) dispatch(clearBitsAction());
+                setTimeout(() => dispatch(clearBitsAction()), 2000);
             }}
         />
     </>
