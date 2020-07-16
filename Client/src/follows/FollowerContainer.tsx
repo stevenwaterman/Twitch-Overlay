@@ -12,7 +12,7 @@ const FollowerContainer: React.FunctionComponent<Props> = () => {
 
     if(user == null) return null;
 
-    return <FollowerBox key={user.followDate.toLocaleString()} user={user.userDisplayName} fps={fps}/>
+    return <FollowerBox key={user.userDisplayName + user.followDate.toLocaleString()} user={user.userDisplayName} fps={fps}/>
 }
 
 export default FollowerContainer;

@@ -17,7 +17,7 @@ const DebugPage: React.FunctionComponent = () => {
         <button onClick={debugSubRequest}>Fake Sub</button>
         <button onClick={debugGiftSubRequest}>Fake Gift Sub</button>
         <button onClick={debugBitsRequest}>Fake Bits</button>
-        <button onClick={debugChatRequest}>Real Chat</button>
+        <button onClick={debugChatRequest}>Fake Chat</button>
     </>
 }
 

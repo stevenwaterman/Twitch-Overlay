@@ -1,6 +1,7 @@
 import {Callbacks, ENV} from "./index";
 import TwitchClient, {HelixUser} from "twitch";
 import PubSubClient, {PubSubBitsMessage, PubSubSubscriptionMessage} from "twitch-pubsub-client";
+import {randomName} from "./utils";
 
 export type MessageInfo = {
     userName: string;
@@ -80,13 +81,14 @@ export async function initPubSub(callbacks: Callbacks, twitchClient: TwitchClien
     await client.onBits(user, async (bits: PubSubBitsMessage) => {
         const user = bits.isAnonymous ? null : await bits.getUser();
         const displayName = user === null ? bits.userName : user.displayName;
+        const userId = user === null ? null : user.id;
         callbacks.onBits({
             bits: bits.bits,
             isAnonymous: bits.isAnonymous,
             message: bits.message,
             totalBits: bits.totalBits,
-            userId: displayName || "Anonymous",
-            userName: "Anonymous"
+            userId: userId || "Anonymous",
+            userName: displayName || "Anonymous"
         })
     })
 
@@ -102,9 +104,9 @@ export async function initPubSub(callbacks: Callbacks, twitchClient: TwitchClien
             },
             subPlan: "Prime",
             time: new Date(),
-            userId: user.id,
-            userName: user.name,
-            userDisplayName: user.displayName
+            userId: randomName(),
+            userName: randomName(),
+            userDisplayName: randomName()
         })
     }
 
@@ -113,12 +115,12 @@ export async function initPubSub(callbacks: Callbacks, twitchClient: TwitchClien
         callbacks.onSubscribe({
             context: "subgift",
             months: 1,
-            recipientDisplayName: "Recipient",
-            recipientId: user.id,
-            recipientUserName: "recipient",
-            userDisplayName: "Giver",
-            userId: user.id,
-            userName: "giver",
+            recipientDisplayName: randomName(),
+            recipientId: randomName(),
+            recipientUserName: randomName(),
+            userDisplayName: randomName(),
+            userId: randomName(),
+            userName: randomName(),
             time: new Date(),
             subPlan: "1000"
         })
@@ -128,8 +130,8 @@ export async function initPubSub(callbacks: Callbacks, twitchClient: TwitchClien
         console.log("Debug Bits");
         callbacks.onBits({
             isAnonymous: false,
-            userId: user.id,
-            userName: user.displayName,
+            userId: randomName(),
+            userName: randomName(),
             message: "Corgo100",
             bits: 100,
             totalBits: 500

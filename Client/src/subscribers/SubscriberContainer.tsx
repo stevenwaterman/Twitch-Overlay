@@ -15,9 +15,9 @@ const SubscriberContainer: React.FunctionComponent<Props> = () => {
     console.log(sub);
 
     if(sub.context === "subgift" || sub.context === "anonsubgift") {
-        return <GiftSubscriberBox key={sub.userId} recipient={sub.recipientDisplayName} giver={sub.userDisplayName} fps={fps}/>
+        return <GiftSubscriberBox key={new Date().toLocaleDateString() + sub.userId} recipient={sub.recipientDisplayName} giver={sub.userDisplayName} fps={fps}/>
     } else {
-        return <SelfSubscriberBox key={sub.userId} user={sub.userDisplayName} message={sub.context === "sub" || sub.context === "resub" ? sub.subMessage : null} fps={fps}/>
+        return <SelfSubscriberBox key={new Date().toLocaleDateString() + sub.userId} user={sub.userDisplayName} message={sub.context === "sub" || sub.context === "resub" ? sub.subMessage : null} fps={fps}/>
     }
 }
 

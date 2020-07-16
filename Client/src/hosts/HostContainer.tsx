@@ -9,7 +9,7 @@ const HostContainer: React.FunctionComponent<Props> = () => {
 
     if(event == null) return null;
 
-    return <HostBox user={event.channel}/>
+    return <HostBox key={event.channel + new Date().toLocaleDateString()} user={event.channel}/>
 }
 
 export default HostContainer;
