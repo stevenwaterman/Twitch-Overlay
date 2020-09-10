@@ -24,3 +24,12 @@ services:
             - 30300:8080
             - 52452:52452
         restart: unless-stopped
+    svelteclient:
+        build:
+            context: ./Client-Svelte
+        container_name: svelteclient
+        env_file:
+            - .env
+        ports:
+            - 5010:5000
+        restart: unless-stopped
