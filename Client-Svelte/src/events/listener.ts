@@ -3,7 +3,7 @@ import { Alert, currentAlertStore } from "./alerts";
 import { Event, registerEvent } from "./events";
 
 export function initialise() {
-  const websocket = new WebSocketClient(`ws://192.168.8.115:30301/events`);
+  const websocket = new WebSocketClient(`__SERVER__/events`);
 
   let id = 0;
   websocket.onMessage = message => {

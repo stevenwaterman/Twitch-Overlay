@@ -38,6 +38,11 @@ export default {
     !production && serve(),
     !production && livereload("public"),
     production && terser(),
+
+    replace({
+          __SERVER__: "ws://192.168.8.115:30300",
+          delimiters: ["", ""]
+        }),
   ],
 };
 
