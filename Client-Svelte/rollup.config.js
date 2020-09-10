@@ -1,6 +1,7 @@
 import typescript from "@rollup/plugin-typescript";
 import sveltePreprocess from "svelte-preprocess";
 import svelte from "rollup-plugin-svelte";
+import replace from "@rollup/plugin-replace";
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import livereload from "rollup-plugin-livereload";
