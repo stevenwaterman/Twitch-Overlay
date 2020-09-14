@@ -3,7 +3,7 @@
   import ChatLine from "./ChatLine.svelte";
 
   export let scale: number = 1.5;
-  export let maxWidth: number = 100;
+  export let maxWidth: number = 40;
   let chatBoxStyle: string;
   $: chatBoxStyle = 
     `font-size: ${scale}vw;` +
