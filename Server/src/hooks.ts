@@ -11,25 +11,34 @@ export async function initHooks(callbacks: Callbacks, twitchClient: TwitchClient
 
     const listener = new WebHookListener(twitchClient, await LegacyAdapter.create({port}));
 
-    await listener.subscribeToFollowsToUser(user, (follow: HelixFollow) => {
-        console.log("Follow from ", follow.userDisplayName);
-        callbacks.onFollow(follow);
-    });
+    setInterval(async () => {
+      console.log("Starting Hooks");
 
-    await listener.listen();
+      try {
+        listener.unlisten();
+      } catch {
+        console.log("error unlistening");
+      }
 
-    console.log("Listening");
-
-    callbacks.debugFollow = () => {
-        console.log("Debug Follow");
-        callbacks.onFollow(new HelixFollow({
-            followed_at: new Date().toLocaleDateString(),
-            from_id: randomName(),
-            from_name: randomName(),
-            to_id: randomName(),
-            to_name: randomName()
-        }, twitchClient));
-    }
+      await listener.subscribeToFollowsToUser(user, (follow: HelixFollow) => {
+          console.log("Follow from ", follow.userDisplayName);
+          callbacks.onFollow(follow);
+      });
+  
+      await listener.listen();
+  
+      callbacks.debugFollow = () => {
+          console.log("Debug Follow");
+          callbacks.onFollow(new HelixFollow({
+              followed_at: new Date().toLocaleDateString(),
+              from_id: randomName(),
+              from_name: randomName(),
+              to_id: randomName(),
+              to_name: randomName()
+          }, twitchClient));
+      }
+    }, 12 * 3600 * 1000);
+    
 
     return callbacks;
 }
