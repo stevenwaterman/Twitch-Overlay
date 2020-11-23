@@ -1,6 +1,5 @@
 import TwitchClient, {HelixFollow, HelixUser} from "twitch";
-import WebHookListener, {ConnectionAdapter, LegacyAdapter, SimpleAdapter} from "twitch-webhooks";
-import LogLevel from "@d-fischer/logger/lib/LogLevel";
+import WebHookListener, {LegacyAdapter} from "twitch-webhooks";
 import {Callbacks, ENV} from "./index";
 import {randomName} from "./utils";
 
@@ -37,6 +36,8 @@ export async function initHooks(callbacks: Callbacks, twitchClient: TwitchClient
               to_name: randomName()
           }, twitchClient));
       }
+
+      console.log("Hooks Started");
     }, 12 * 3600 * 1000);
     
 
