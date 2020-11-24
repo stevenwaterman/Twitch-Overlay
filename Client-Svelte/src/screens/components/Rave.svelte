@@ -1,6 +1,7 @@
 <script lang="ts">
   import { tweened } from "svelte/motion";
   import type { Writable } from "svelte/store";
+  import { fade } from "svelte/transition";
 
   let hue: Writable<number> = tweened(0, {duration: 1000});
 
@@ -20,4 +21,4 @@
   }
 </style>
 
-<div class="rave" style={`background-color: hsl(${$hue}, 100%, 50%)`}/>
+<div class="rave" style={`background-color: hsl(${$hue}, 100%, 50%)`} transition:fade/>

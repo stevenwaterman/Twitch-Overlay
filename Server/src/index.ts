@@ -148,6 +148,8 @@ async function initAll(): Promise<Callbacks> {
 }
 
 async function start() {
+    let rave: boolean = false;
+
     const callbacks: Callbacks = await initAll();
     callbacks.onFollow = onFollow;
     callbacks.onSubscribe = (event) => send("SUBSCRIBE", event);
@@ -164,6 +166,7 @@ async function start() {
 
     app.ws("/events", (ws: ws, req: Request) => {
         sockets.push(ws);
+        callbacks.onRave(rave);
         ws.onclose = () => sockets.filter(it => it !== ws);
     });
 
@@ -208,11 +211,13 @@ async function start() {
     });
     app.post("/debug/rave/on", (req: Request, res: Response) => {
       callbacks.onRave(true);
+      rave = true;
       res.status(200);
       res.send("Complete");
     });
     app.post("/debug/rave/off", (req: Request, res: Response) => {
       callbacks.onRave(false);
+      rave = false;
       res.status(200);
       res.send("Complete");
     });
