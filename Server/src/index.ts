@@ -206,12 +206,12 @@ async function start() {
         res.status(200);
         res.send("Complete");
     });
-    app.post("/rave/on", (req: Request, res: Response) => {
+    app.post("/debug/rave/on", (req: Request, res: Response) => {
       callbacks.onRave(true);
       res.status(200);
       res.send("Complete");
     });
-    app.post("/rave/off", (req: Request, res: Response) => {
+    app.post("/debug/rave/off", (req: Request, res: Response) => {
       callbacks.onRave(false);
       res.status(200);
       res.send("Complete");
