@@ -2,6 +2,7 @@
   import Border from "./components/Border.svelte";
   import Chat from "../chat/Chat.svelte";
   import Twitter from "./components/Twitter.svelte";
+  import RaveContainer from "./components/RaveContainer.svelte";
 </script>
 
 <style>
@@ -47,4 +48,5 @@
 
 <img class="goldie" src="/assets/screens/goldie.svg" alt="Goldie" />
 <Twitter left={100} top={1}/>
+<RaveContainer/>
 <Chat />

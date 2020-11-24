@@ -1,11 +1,14 @@
 import { Alert, currentAlertStore } from "./alerts";
-import { ChatMessage, ChatEvent, chatQueue } from "./chat";
+import { ChatEvent, chatQueue } from "./chat";
+import { raveStore, RaveEvent } from "./rave";
 
-export type Event = Alert | ChatEvent;
+export type Event = Alert | ChatEvent | RaveEvent;
 
 export function registerEvent(event: Event) {
   if(event.type === "CHAT") {
     chatQueue.addMessage(event);
+  } else if (event.type === "RAVE") {
+    raveStore.set(event.payload)
   } else {
     currentAlertStore.addToQueue(event);
   }

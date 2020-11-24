@@ -9,7 +9,6 @@ import {
     Route, Link
 } from "react-router-dom";
 import ChatAlertsContainer from "../chatAlerts/ChatAlertsContainer";
-import DebugPage from "../debug/DebugPage";
 import Chat from "../chat/Chat";
 import RaidContainer from "../raid/RaidContainer";
 import SubscriberContainer from "../subscribers/SubscriberContainer";
@@ -30,7 +29,6 @@ function Root() {
                         <Link to="/raid"><li>Raids</li></Link>
                         <Link to="/host"><li>Host</li></Link>
                         <Link to="/overlay?fps=60"><li>Overlay</li></Link>
-                        <Link to="/debug"><li>Debug</li></Link>
                     </ul>
                 </Route>
                 <Route path="/follows" exact>
@@ -47,9 +45,6 @@ function Root() {
                 </Route>
                 <Route path="/chat" exact>
                     <Chat/>
-                </Route>
-                <Route path="/debug" exact>
-                    <DebugPage/>
                 </Route>
                 <Route path="/raid" exact>
                     <RaidContainer/>

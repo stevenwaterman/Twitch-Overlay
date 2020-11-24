@@ -52,6 +52,7 @@ export type Callbacks = {
     onChat: (chat: ChatEvent) => void;
     onHost: (host: HostEvent) => void;
     onRaid: (raid: ChatRaidInfo) => void;
+    onRave: (enabled: boolean) => void;
     debugFollow: () => void;
     debugSubscribe: () => void;
     debugGiftSubscribe: () => void;
@@ -74,6 +75,8 @@ function initCallbacks(): Callbacks {
         onHost: () => {
         },
         onRaid: () => {
+        },
+        onRave: () => {
         },
         debugFollow: () => {
         },
@@ -152,6 +155,7 @@ async function start() {
     callbacks.onChat = (event) => send("CHAT", event);
     callbacks.onHost = (event) => send("HOST", event);
     callbacks.onRaid = (event) => send("RAID", event);
+    callbacks.onRave = (enabled) => send("RAVE", enabled)
 
     const _app = express();
     const {app} = expressWS(_app);
@@ -181,27 +185,37 @@ async function start() {
         callbacks.debugHost();
         res.status(200);
         res.send("Complete");
-    })
+    });
     app.post("/debug/raid", (req: Request, res: Response) => {
         callbacks.debugRaid();
         res.status(200);
         res.send("Complete");
-    })
+    });
     app.post("/debug/sub", (req: Request, res: Response) => {
         callbacks.debugSubscribe();
         res.status(200);
         res.send("Complete");
-    })
+    });
     app.post("/debug/giftsub", (req: Request, res: Response) => {
         callbacks.debugGiftSubscribe();
         res.status(200);
         res.send("Complete");
-    })
+    });
     app.post("/debug/bits", (req: Request, res: Response) => {
         callbacks.debugBits();
         res.status(200);
         res.send("Complete");
-    })
+    });
+    app.post("/rave/on", (req: Request, res: Response) => {
+      callbacks.onRave(true);
+      res.status(200);
+      res.send("Complete");
+    });
+    app.post("/rave/off", (req: Request, res: Response) => {
+      callbacks.onRave(false);
+      res.status(200);
+      res.send("Complete");
+    });
 
     function send(type: string, payload: any) {
         sockets = sockets.filter(socket => socket.readyState === 1);

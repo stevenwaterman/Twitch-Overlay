@@ -1,11 +1,7 @@
 <script lang="ts">
   import type { FollowAlert } from "../events/alerts";
   import { currentAlertStore } from "../events/alerts";
-  import { afterUpdate, onMount } from "svelte";
-  import { tweened } from "svelte/motion";
-  import { linear } from "svelte/easing";
-  import type { Writable, Readable } from "svelte/store";
-  import { derived } from "svelte/store";
+  import { afterUpdate } from "svelte";
 
   export let alert: FollowAlert["payload"];
 

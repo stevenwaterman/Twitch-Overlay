@@ -1,6 +1,4 @@
 <script lang="ts">
-import AlertController from "./alerts/AlertController.svelte";
-import Chat from "./chat/Chat.svelte";
 import Intro from "./screens/Intro.svelte";
 import IntroWithMusic from "./screens/IntroWithMusic.svelte";
 import Break from "./screens/Break.svelte";
@@ -8,6 +6,7 @@ import SoloFaces from "./screens/SoloFaces.svelte";
 import DualFaces from "./screens/DualFaces.svelte";
 import SingleGame from "./screens/SingleGame.svelte";
 import PriorityGame from "./screens/PriorityGame.svelte";
+import Debug from "./screens/debug/Debug.svelte";
 
 import { Router, Link, Route } from "svelte-routing";
 
@@ -24,6 +23,7 @@ export let url = "";
 <Router url={url}>
   <Route path="/">
     <div class="links">
+      <Link to="debug">debug</Link>
       <Link to="intro">intro</Link>
       <Link to="intro/silent">intro/silent</Link>
       <Link to="break">break</Link>
@@ -48,14 +48,5 @@ export let url = "";
   <Route path="game/single/right"><SingleGame leftCamera="other"/></Route>
   <Route path="game/priority/left"><PriorityGame/></Route>
   <Route path="game/priority/right"><PriorityGame flipX/></Route>
+  <Route path="debug" component={Debug}/>
 </Router>
-
-<!-- <Break/> -->
-<!-- <Intro/> -->
-<!-- <IntroWithMusic/> -->
-<!-- <Chat/> -->
-<!-- <AlertController/> -->
-<!-- <SoloFaces/> -->
-<!-- <DualFaces/> -->
-<!-- <PriorityGame/> -->
-<!-- <SingleGame/> -->

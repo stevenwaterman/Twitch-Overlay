@@ -41,7 +41,7 @@ export default {
     production && terser(),
 
     replace({
-          __SERVER__: "ws://192.168.8.115:30301",
+          __SERVER__: "192.168.8.115:30301",
           delimiters: ["", ""]
         }),
   ],

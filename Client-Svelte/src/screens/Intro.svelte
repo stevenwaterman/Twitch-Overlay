@@ -1,6 +1,7 @@
 <script>
   import Chat from "../chat/Chat.svelte";
   import Twitter from "./components/Twitter.svelte";
+  import RaveContainer from "./components/RaveContainer.svelte";
 </script>
 
 <style>
@@ -70,6 +71,8 @@
     </text>
   </svg>
   <img class="goldie" src="/assets/screens/goldie.svg" alt="Goldie" />
+
+  <RaveContainer/>
   <div class="chat">
     <Chat />
   </div>
