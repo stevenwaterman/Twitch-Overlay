@@ -2,6 +2,7 @@
   import Border from "./components/Border.svelte";
   import Chat from "../chat/Chat.svelte";
   import Arrow from "./components/Arrow.svelte";
+import AlertController from "../alerts/AlertController.svelte";
 
   export let mainCamera: "shown" | "hidden" = "shown";
   export let secondaryCamera: "shown" | "hidden" = "shown";
@@ -73,4 +74,5 @@
     </div>
   {/if}
 </div>
+<AlertController />
 <Chat />

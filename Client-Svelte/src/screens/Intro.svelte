@@ -1,5 +1,6 @@
 <script>
-  import Chat from "../chat/Chat.svelte";
+  import AlertController from "../alerts/AlertController.svelte";
+import Chat from "../chat/Chat.svelte";
   import Twitter from "./components/Twitter.svelte";
 </script>
 
@@ -71,6 +72,7 @@
   </svg>
   <img class="goldie" src="/assets/screens/goldie.svg" alt="Goldie" />
 
+  <AlertController />
   <div class="chat">
     <Chat />
   </div>

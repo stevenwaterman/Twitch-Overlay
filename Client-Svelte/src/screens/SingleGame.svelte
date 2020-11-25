@@ -2,6 +2,7 @@
   import Border from "./components/Border.svelte";
   import Chat from "../chat/Chat.svelte";
   import Arrow from "./components/Arrow.svelte";
+import AlertController from "../alerts/AlertController.svelte";
 
   export let leftCamera: "priority" | "other" | "hidden" = "priority";
   export let rightCamera: "priority" | "other" | "hidden" = "priority";
@@ -62,4 +63,5 @@
     <Arrow rotateDeg={225}/>
   </div>
 {/if}
+<AlertController />
 <Chat />

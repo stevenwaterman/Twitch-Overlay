@@ -4,6 +4,7 @@
   import Border from "./components/Border.svelte";
   import { fly } from "svelte/transition";
   import { quadIn, quadOut } from "svelte/easing";
+import AlertController from "../alerts/AlertController.svelte";
 
   const minSlide: number = 1;
   const maxSlide: number = 72;
@@ -127,6 +128,7 @@
     </text>
   </svg>
 
+  <AlertController/>
   <div class="chat">
     <Chat />
   </div>

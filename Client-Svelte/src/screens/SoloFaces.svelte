@@ -1,6 +1,7 @@
 <script lang="ts">
   import Border from "./components/Border.svelte";
   import Chat from "../chat/Chat.svelte";
+import AlertController from "../alerts/AlertController.svelte";
 </script>
 
 <style>
@@ -25,4 +26,5 @@
   <Border/>
 </div>
 <img class="goldie" src="/assets/screens/goldie.svg" alt="Goldie" />
+<AlertController />
 <Chat />
