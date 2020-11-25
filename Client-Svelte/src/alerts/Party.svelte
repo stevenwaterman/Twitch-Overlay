@@ -1,17 +1,21 @@
 <script lang="ts">
-  import { afterUpdate } from "svelte";
+  import { onMount } from "svelte";
   import { tweened } from "svelte/motion";
   import type { Writable } from "svelte/store";
   import { currentAlertStore } from "../events/alerts";
-  import { fade } from "svelte/transition";
+  import { hsluvToHex } from "hsluv";
 
-  let hue: Writable<number> = tweened(0, {duration: 1000});
+  let hue: Writable<number> = tweened(0, {duration: 37 * 1000});
+  let opacity: Writable<number> = tweened(0, {duration: 1000});
+  let hex: string;
+  $: hex = hsluvToHex([$hue % 360, 80, 50]);
 
-  afterUpdate(() => setTimeout(() => currentAlertStore.clear(), 42 * 1000));
-
-  setInterval(() => {
-    hue.set(Math.random() * 360);
-  }, 1000)
+  onMount(() => {
+    opacity.set(30);
+    hue.set(360 * 20);
+    setTimeout(() => currentAlertStore.clear(), 37 * 1000);
+    setTimeout(() => {opacity.set(0)}, 34 * 1000);
+  });
 </script>
 
 <style>
@@ -25,5 +29,5 @@
   }
 </style>
 
-<div class="party" style={`background-color: hsl(${$hue}, 100%, 50%)`} transition:fade/>
+<div class="party" style={`background-color: ${hex}; opacity: ${$opacity}%;`}/>
 <audio src="/assets/party/audio.wav" autoplay />
