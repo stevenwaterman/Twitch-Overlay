@@ -123,7 +123,6 @@ async function initAll(): Promise<Callbacks> {
     console.log("Init Chat done");
 
     badges = await badgesRequest;
-    console.log(badges);
 
     return callbacks;
 }
