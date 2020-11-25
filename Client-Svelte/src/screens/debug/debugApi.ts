@@ -26,9 +26,8 @@ export async function debugBitsRequest() {
   return debugRequest("bits");
 }
 
-export async function setRave(enabled: boolean) {
-  if(enabled) return debugRequest("rave/on");
-  else return debugRequest("rave/off");
+export async function debugPartyRequest() {
+  return debugRequest("party");
 }
 
 async function debugRequest(path: string) {

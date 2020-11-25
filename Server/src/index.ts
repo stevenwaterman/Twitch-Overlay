@@ -4,7 +4,7 @@ import {initHooks} from "./hooks";
 import * as ws from 'ws';
 import {initChat} from "./chat";
 import fs from "fs";
-import TwitchClient, {ChatBadgeList, HelixFollow, HelixUser} from "twitch";
+import TwitchClient, {HelixFollow, HelixUser} from "twitch";
 import {BitsEvent, initPubSub, SubEvent} from "./pubsub";
 import {ChatRaidInfo} from "twitch-chat-client";
 import {getBadges} from "./badges";
@@ -53,7 +53,7 @@ export type Callbacks = {
     onChat: (chat: ChatEvent) => void;
     onHost: (host: HostEvent) => void;
     onRaid: (raid: ChatRaidInfo) => void;
-    onRave: (enabled: boolean) => void;
+    onParty: () => void;
     onBadges: (badges: Record<string, string>) => void;
     debugFollow: () => void;
     debugSubscribe: () => void;
@@ -91,7 +91,6 @@ function initEnv(): ENV {
 }
 
 let badges: Record<string, string> = {};
-let rave: boolean = false;
 
 async function initAll(): Promise<Callbacks> {
     const env = initEnv();
@@ -135,7 +134,7 @@ async function start() {
     callbacks.onChat = (event) => send("CHAT", event);
     callbacks.onHost = (event) => send("HOST", event);
     callbacks.onRaid = (event) => send("RAID", event);
-    callbacks.onRave = (enabled) => send("RAVE", enabled);
+    callbacks.onParty = () => send("PARTY", {});
     callbacks.onBadges = (badges) => send("BADGES", badges);
 
     const _app = express();
@@ -145,7 +144,6 @@ async function start() {
 
     app.ws("/events", (ws: ws, req: Request) => {
         sockets.push(ws);
-        callbacks.onRave(rave);
         callbacks.onBadges(badges);
         ws.onclose = () => sockets.filter(it => it !== ws);
     });
@@ -189,15 +187,8 @@ async function start() {
         res.status(200);
         res.send("Complete");
     });
-    app.post("/debug/rave/on", (req: Request, res: Response) => {
-      callbacks.onRave(true);
-      rave = true;
-      res.status(200);
-      res.send("Complete");
-    });
-    app.post("/debug/rave/off", (req: Request, res: Response) => {
-      callbacks.onRave(false);
-      rave = false;
+    app.post("/debug/party", (req: Request, res: Response) => {
+      callbacks.onParty();
       res.status(200);
       res.send("Complete");
     });

@@ -6,6 +6,7 @@
   import Host from "./Host.svelte";
   import Raid from "./Raid.svelte";
   import Subscribe from "./Subscribe.svelte";
+  import Party from "./Party.svelte";
 
   let alert: Alert | null;
   $: alert = $currentAlertStore;
@@ -27,6 +28,8 @@
     <Raid alert={payload} />
   {:else if type === 'SUBSCRIBE'}
     <Subscribe alert={payload} />
+  {:else if type === 'PARTY'}
+    <Party />
   {/if}
 
   {JSON.stringify(payload)}

@@ -1,5 +1,5 @@
 import { Readable, writable, derived, Writable } from "svelte/store"
-import { SubEvent, SubMessage } from "./sub";
+import { SubEvent } from "./sub";
 
 export type EventTemplate<TYPE extends string, PAYLOAD> = {
   id: number,
@@ -27,9 +27,11 @@ export type RaidAlert = EventTemplate<"RAID", {
   viewerCount: number
 }>;
 
+export type PartyAlert = EventTemplate<"PARTY", {}>;
+
 export type SubscribeAlert = EventTemplate<"SUBSCRIBE", SubEvent>;
 
-export type Alert = BitsAlert | FollowAlert | HostAlert | RaidAlert | SubscribeAlert;
+export type Alert = BitsAlert | FollowAlert | HostAlert | RaidAlert | SubscribeAlert | PartyAlert;
 
 type AlertQueue = Alert[];
 

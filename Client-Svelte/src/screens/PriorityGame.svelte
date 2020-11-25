@@ -2,7 +2,6 @@
   import Border from "./components/Border.svelte";
   import Chat from "../chat/Chat.svelte";
   import Arrow from "./components/Arrow.svelte";
-  import RaveContainer from "./components/RaveContainer.svelte";
 
   export let mainCamera: "shown" | "hidden" = "shown";
   export let secondaryCamera: "shown" | "hidden" = "shown";
@@ -74,5 +73,4 @@
     </div>
   {/if}
 </div>
-<RaveContainer/>
 <Chat />

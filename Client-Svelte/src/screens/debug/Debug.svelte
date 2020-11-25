@@ -1,8 +1,5 @@
 <script lang="ts">
-  import { debugBitsRequest, debugChatRequest, debugFollowRequest, debugGiftSubRequest, debugHostRequest, debugRaidRequest, debugSubRequest, setRave } from "./debugApi";
-
-  let rave: boolean = false;
-  $: setRave(rave);
+  import { debugBitsRequest, debugChatRequest, debugFollowRequest, debugGiftSubRequest, debugHostRequest, debugRaidRequest, debugSubRequest, debugPartyRequest } from "./debugApi";
 </script>
 
 <button on:click={debugFollowRequest}>Follow</button>
@@ -12,6 +9,4 @@
 <button on:click={debugSubRequest}>Sub</button>
 <button on:click={debugGiftSubRequest}>Gift Sub</button>
 <button on:click={debugBitsRequest}>Bits</button>
-
-<label>Rave</label>
-<input type="checkbox" bind:checked={rave}/>
+<button on:click={debugPartyRequest}>Party</button>

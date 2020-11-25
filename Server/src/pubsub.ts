@@ -1,6 +1,6 @@
 import {Callbacks, ENV} from "./index";
 import TwitchClient, {HelixUser} from "twitch";
-import PubSubClient, {PubSubBitsMessage, PubSubSubscriptionMessage} from "twitch-pubsub-client";
+import PubSubClient, {PubSubBitsMessage, PubSubSubscriptionMessage, PubSubRedemptionMessage} from "twitch-pubsub-client";
 import {randomName} from "./utils";
 
 export type MessageInfo = {
@@ -90,6 +90,12 @@ export async function initPubSub(callbacks: Callbacks, twitchClient: TwitchClien
             userId: userId || "Anonymous",
             userName: displayName || "Anonymous"
         })
+    });
+
+    await client.onRedemption(user, async (redemption: PubSubRedemptionMessage) => {
+      if(redemption.rewardName.toLowerCase() === "party") {
+        callbacks.onParty();
+      }
     })
 
     callbacks.debugSubscribe = () => {

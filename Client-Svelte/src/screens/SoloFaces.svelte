@@ -1,7 +1,6 @@
 <script lang="ts">
   import Border from "./components/Border.svelte";
   import Chat from "../chat/Chat.svelte";
-  import RaveContainer from "./components/RaveContainer.svelte";
 </script>
 
 <style>
@@ -26,5 +25,4 @@
   <Border/>
 </div>
 <img class="goldie" src="/assets/screens/goldie.svg" alt="Goldie" />
-<RaveContainer/>
 <Chat />
