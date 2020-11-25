@@ -4,9 +4,10 @@ import {initHooks} from "./hooks";
 import * as ws from 'ws';
 import {initChat} from "./chat";
 import fs from "fs";
-import TwitchClient, {HelixFollow, HelixUser} from "twitch";
+import TwitchClient, {ChatBadgeList, HelixFollow, HelixUser} from "twitch";
 import {BitsEvent, initPubSub, SubEvent} from "./pubsub";
-import {ChatRaidInfo, LogLevel} from "twitch-chat-client";
+import {ChatRaidInfo} from "twitch-chat-client";
+import {getBadges} from "./badges";
 
 export type ENV = {
     channelName: string
@@ -53,6 +54,7 @@ export type Callbacks = {
     onHost: (host: HostEvent) => void;
     onRaid: (raid: ChatRaidInfo) => void;
     onRave: (enabled: boolean) => void;
+    onBadges: (badges: Record<string, string>) => void;
     debugFollow: () => void;
     debugSubscribe: () => void;
     debugGiftSubscribe: () => void;
@@ -63,36 +65,7 @@ export type Callbacks = {
 }
 
 function initCallbacks(): Callbacks {
-    return {
-        onFollow: () => {
-        },
-        onSubscribe: () => {
-        },
-        onBits: () => {
-        },
-        onChat: () => {
-        },
-        onHost: () => {
-        },
-        onRaid: () => {
-        },
-        onRave: () => {
-        },
-        debugFollow: () => {
-        },
-        debugSubscribe: () => {
-        },
-        debugBits: () => {
-        },
-        debugGiftSubscribe: () => {
-        },
-        debugChat: () => {
-        },
-        debugHost: () => {
-        },
-        debugRaid: () => {
-        }
-    }
+    return {} as any;
 }
 
 function initEnv(): ENV {
@@ -117,6 +90,9 @@ function initEnv(): ENV {
     }
 }
 
+let badges: Record<string, string> = {};
+let rave: boolean = false;
+
 async function initAll(): Promise<Callbacks> {
     const env = initEnv();
 
@@ -131,25 +107,28 @@ async function initAll(): Promise<Callbacks> {
         throw("user null");
     }
 
+    const badgesRequest = getBadges(twitchClient, user);
+
     let callbacks = initCallbacks();
-    console.log("Init Hooks")
+    console.log("Init Hooks");
     callbacks = await initHooks(callbacks, twitchClient, user, env);
-    console.log("Init Hooks Done")
+    console.log("Init Hooks Done");
 
-    console.log("Init Pubsub")
+    console.log("Init Pubsub");
     callbacks = await initPubSub(callbacks, twitchClient, user, env);
-    console.log("Init Pubsub done")
+    console.log("Init Pubsub done");
 
-    console.log("Init Chat")
+    console.log("Init Chat");
     callbacks = await initChat(callbacks, twitchClient, env);
-    console.log("Init Chat done")
+    console.log("Init Chat done");
+
+    badges = await badgesRequest;
+    console.log(badges);
 
     return callbacks;
 }
 
 async function start() {
-    let rave: boolean = false;
-
     const callbacks: Callbacks = await initAll();
     callbacks.onFollow = onFollow;
     callbacks.onSubscribe = (event) => send("SUBSCRIBE", event);
@@ -157,7 +136,8 @@ async function start() {
     callbacks.onChat = (event) => send("CHAT", event);
     callbacks.onHost = (event) => send("HOST", event);
     callbacks.onRaid = (event) => send("RAID", event);
-    callbacks.onRave = (enabled) => send("RAVE", enabled)
+    callbacks.onRave = (enabled) => send("RAVE", enabled);
+    callbacks.onBadges = (badges) => send("BADGES", badges);
 
     const _app = express();
     const {app} = expressWS(_app);
@@ -167,6 +147,7 @@ async function start() {
     app.ws("/events", (ws: ws, req: Request) => {
         sockets.push(ws);
         callbacks.onRave(rave);
+        callbacks.onBadges(badges);
         ws.onclose = () => sockets.filter(it => it !== ws);
     });
 
