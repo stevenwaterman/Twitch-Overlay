@@ -12,9 +12,9 @@
 
   onMount(() => {
     opacity.set(30);
-    hue.set(360 * 20);
-    setTimeout(() => currentAlertStore.clear(), 37 * 1000);
-    setTimeout(() => {opacity.set(0)}, 34 * 1000);
+    hue.set(360 * 10);
+    setTimeout(() => currentAlertStore.clear(), 22 * 1000);
+    setTimeout(() => {opacity.set(0)}, 20 * 1000);
   });
 </script>
 
