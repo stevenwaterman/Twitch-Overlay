@@ -10,13 +10,15 @@ export async function initHooks(callbacks: Callbacks, twitchClient: TwitchClient
     const port = parseInt(portString);
 
     const listener = new WebHookListener(twitchClient, await LegacyAdapter.create({port}));
-    await listener.listen()
+    await listener.listen();
 
     let subscription: FollowsToUserSubscription = await startHooks(listener, user, callbacks);
     setInterval(async () => {
+        console.log("Restarting Subscription");
         await subscription.stop();
         subscription = await startHooks(listener, user, callbacks);
-    }, 3600 * 1000); // Hourly
+        console.log("Subscription Restarted");
+    }, 7 * 24 * 3600 * 1000); // Weekly
 
     callbacks.debugFollow = () => {
         console.log("Debug Follow");
