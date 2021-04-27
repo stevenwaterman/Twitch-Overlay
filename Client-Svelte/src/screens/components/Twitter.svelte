@@ -52,7 +52,7 @@
   <img class="twitterLogo" src="/assets/screens/twitter.svg" alt="Goldie" />
   <svg
     class="twitterSvg"
-    viewBox="-42 -11 84 18"
+    viewBox="-42 -10 84 22"
     preserveAspectRatio="xMidYMid meet">
     <!-- <rect x="-42" y="-11" width="84" height="17" fill="red"/> -->
     <text class="twitterText" dominant-baseline="middle" text-anchor="middle">
