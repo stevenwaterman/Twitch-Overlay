@@ -56,7 +56,7 @@
     preserveAspectRatio="xMidYMid meet">
     <!-- <rect x="-42" y="-11" width="84" height="17" fill="red"/> -->
     <text class="twitterText" dominant-baseline="middle" text-anchor="middle">
-      @its_amie_live
+      @HeyArtie_
     </text>
   </svg>
 </div>
