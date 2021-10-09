@@ -109,9 +109,9 @@ async function initAll(): Promise<Callbacks> {
     const badgesRequest = getBadges(twitchClient, user);
 
     let callbacks = initCallbacks();
-    console.log("Init Hooks");
-    callbacks = await initHooks(callbacks, twitchClient, user, env);
-    console.log("Init Hooks Done");
+    // console.log("Init Hooks");
+    // callbacks = await initHooks(callbacks, twitchClient, user, env);
+    // console.log("Init Hooks Done");
 
     console.log("Init Pubsub");
     callbacks = await initPubSub(callbacks, twitchClient, user, env);
