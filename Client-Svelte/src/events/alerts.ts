@@ -36,8 +36,9 @@ export type Alert = BitsAlert | FollowAlert | HostAlert | RaidAlert | SubscribeA
 type AlertQueue = Alert[];
 
 const alertQueueStore: Writable<AlertQueue> = writable([]);
+const partyAlertStore: Readable<AlertQueue> = derived(alertQueueStore, alerts => alerts.filter(alert => alert.type === "PARTY"));
 
-const currentAlertInner = derived(alertQueueStore, (alertQueue) => {
+const currentAlertInner = derived(partyAlertStore, (alertQueue) => {
   if (alertQueue.length === 0) return null;
   return alertQueue[0];
 });
