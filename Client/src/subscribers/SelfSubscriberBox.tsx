@@ -7,11 +7,11 @@ import "./subscribe.css";
 import {say} from "../tts";
 import {play} from "../audio";
 
-type Props = { user: string; message: ChatMessage | null ; fps: number };
+type Props = { user: string; message: ChatMessage | null ; fps: number; mute: boolean };
 
 const confettiScale = 20;
 
-const SelfSubscriberBox: React.FunctionComponent<Props> = ({user, message, fps}: Props) => {
+const SelfSubscriberBox: React.FunctionComponent<Props> = ({user, message, fps, mute}: Props) => {
     const {width, height} = useWindowSize();
     const dispatch = useAppDispatch();
 
@@ -24,7 +24,7 @@ const SelfSubscriberBox: React.FunctionComponent<Props> = ({user, message, fps}:
     }, [message])
 
     useEffect(() => {
-        const duration = play("subscriberAlert", {start: 0.5});
+        const duration = play("subscriberAlert", {start: 0.5, volume: mute ? 0 : 1});
         setTimeout(() => {
             dispatch(clearSubscribeAction());
         }, duration);

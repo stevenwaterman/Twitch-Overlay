@@ -6,16 +6,16 @@ import {useAppDispatch} from "../root/RootStore";
 import "./subscribe.css";
 import {play} from "../audio";
 
-type Props = { giver: string; recipient: string; fps: number };
+type Props = { giver: string; recipient: string; fps: number; mute: boolean };
 
 const confettiScale = 20;
 
-const GiftSubscriberBox: React.FunctionComponent<Props> = ({giver, recipient, fps}: Props) => {
+const GiftSubscriberBox: React.FunctionComponent<Props> = ({giver, recipient, fps, mute}: Props) => {
     const {width, height} = useWindowSize();
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        const duration = play("subscriberAlert", {start: 0.5});
+        const duration = play("subscriberAlert", {start: 0.5, volume: mute ? 0 : 1});
         setTimeout(() => {
             dispatch(clearSubscribeAction());
         }, duration);

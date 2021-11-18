@@ -6,19 +6,21 @@ import {useAppDispatch} from "../root/RootStore";
 import "./bits.css";
 import {play} from "../audio";
 
-type Props = { id: string; user: string; message: string; bits: number; fps: number };
+type Props = { id: string; user: string; message: string; bits: number; fps: number; min?: number; mute: boolean };
 
 const confettiScale = 20;
 
-const BitsBox: React.FunctionComponent<Props> = ({id, user, bits, message, fps}: Props) => {
+const BitsBox: React.FunctionComponent<Props> = ({id, user, bits, message, fps, min, mute}: Props) => {
     const {width, height} = useWindowSize();
     const dispatch = useAppDispatch();
+
+    if (min !== undefined && bits < min) dispatch(clearBitsAction());
 
     const [bitsDisplay, setBitsDisplay] = useState(0);
 
     useEffect(() => {
-        play("bitsAlert");
-    }, [id])
+        play("bitsAlert", {volume: mute ? 0 : 1});
+    }, [id, mute])
 
     return <>
         <div className="bitsLogo" style={{

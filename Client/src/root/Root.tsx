@@ -29,16 +29,17 @@ function Root() {
                         <Link to="/raid"><li>Raids</li></Link>
                         <Link to="/host"><li>Host</li></Link>
                         <Link to="/overlay?fps=60"><li>Overlay</li></Link>
+                        <Link to="/frontpage?fps=60"><li>Frontpage</li></Link>
                     </ul>
                 </Route>
                 <Route path="/follows" exact>
                     <FollowerContainer/>
                 </Route>
                 <Route path="/subscribers" exact>
-                    <SubscriberContainer/>
+                    <SubscriberContainer mute={false}/>
                 </Route>
                 <Route path="/bits" exact>
-                    <BitsContainer/>
+                    <BitsContainer mute={false}/>
                 </Route>
                 <Route path="/chatAlerts" exact>
                     <ChatAlertsContainer/>
@@ -47,17 +48,23 @@ function Root() {
                     <Chat/>
                 </Route>
                 <Route path="/raid" exact>
-                    <RaidContainer/>
+                    <RaidContainer mute={false}/>
                 </Route>
                 <Route path="/host" exact>
-                    <HostContainer/>
+                    <HostContainer mute={false}/>
                 </Route>
                 <Route path="/overlay" exact>
-                    <SubscriberContainer/>
-                    <BitsContainer/>
-                    <RaidContainer/>
+                    <SubscriberContainer mute={false}/>
+                    <BitsContainer mute={false}/>
+                    <RaidContainer mute={false}/>
                     <FollowerContainer/>
-                    <HostContainer/>
+                    <HostContainer mute={false}/>
+                </Route>
+                <Route path="/frontpage" exact>
+                    <SubscriberContainer mute={true}/>
+                    <BitsContainer min={100} mute={true}/>
+                    <RaidContainer mute={true}/>
+                    <HostContainer mute={true}/>
                 </Route>
 
                 <Route>

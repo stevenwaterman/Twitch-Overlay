@@ -7,6 +7,7 @@ import {play} from "../audio";
 type Props = {
     displayName: string;
     viewerCount: number;
+    mute: boolean;
 }
 
 /**
@@ -16,7 +17,7 @@ function gaussRandom(iter: number): number {
     return new Array(iter).fill(null).map(() => Math.random()).reduce((a, b) => a + b) / iter;
 }
 
-const RaidBox: React.FunctionComponent<Props> = ({displayName, viewerCount}: Props) => {
+const RaidBox: React.FunctionComponent<Props> = ({displayName, viewerCount, mute}: Props) => {
     const goldieCount = Math.min(viewerCount, 1000);
     const goldieLeft: number[] = new Array(goldieCount).fill(null).map(() => -(8 * goldieCount + 1000) * gaussRandom(2));
     const goldieBottom: number[] = new Array(goldieCount).fill(null).map(() => (goldieCount + 50) * (gaussRandom(5) - 0.5) + 50);
@@ -27,9 +28,9 @@ const RaidBox: React.FunctionComponent<Props> = ({displayName, viewerCount}: Pro
     const delay = 15000-Math.min(15000, duration);
 
 
-    play("raidAlert", {volume: 0.5})
+    play("raidAlert", {volume: mute ? 0 : 0.5})
 
-    const volume = 0.1 + 0.9/Math.max(1, goldieCount);
+    const volume = mute ? 0 : (0.1 + 0.9/Math.max(1, goldieCount));
 
 
     const dispatch = useAppDispatch();

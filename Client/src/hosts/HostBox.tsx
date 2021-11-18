@@ -4,13 +4,13 @@ import {useAppDispatch} from "../root/RootStore";
 import "./host.css";
 import {play} from "../audio";
 
-type Props = { user: string };
+type Props = { user: string; mute: boolean };
 
-const HostBox: React.FunctionComponent<Props> = ({user}: Props) => {
+const HostBox: React.FunctionComponent<Props> = ({user, mute}: Props) => {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        const duration = play("hostAlert", {start: 0.5})
+        const duration = play("hostAlert", {start: 0.5, volume: mute ? 0 : 1})
         setTimeout(() => {
             dispatch(clearHostAction());
         }, duration);
