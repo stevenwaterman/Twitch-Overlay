@@ -139,7 +139,7 @@ export async function initPubSub(callbacks: Callbacks, twitchClient: TwitchClien
             userId: randomName(),
             userName: randomName(),
             message: "Corgo100",
-            bits: 100,
+            bits: 99,
             totalBits: 500
         });
     }
