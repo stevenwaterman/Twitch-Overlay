@@ -1,11 +1,11 @@
 <script lang="ts">
   import type { Alert } from "../events/alerts";
   import { currentAlertStore } from "../events/alerts";
-  import Bits from "./Bits.svelte";
-  import Follow from "./Follow.svelte";
-  import Host from "./Host.svelte";
-  import Raid from "./Raid.svelte";
-  import Subscribe from "./Subscribe.svelte";
+  // import Bits from "./Bits.svelte";
+  // import Follow from "./Follow.svelte";
+  // import Host from "./Host.svelte";
+  // import Raid from "./Raid.svelte";
+  // import Subscribe from "./Subscribe.svelte";
   import Party from "./Party.svelte";
 
   let alert: Alert | null;
