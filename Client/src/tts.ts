@@ -3,7 +3,7 @@ let voice: SpeechSynthesisVoice | null = null;
 
 function loadVoices() {
     console.log("voices changed");
-    voice = speech.getVoices().filter(voice => voice.lang === "en-GB")[0];
+    voice = speech.getVoices().find(voice => voice.name === "English (Scotland)") ?? null;
 }
 loadVoices();
 
