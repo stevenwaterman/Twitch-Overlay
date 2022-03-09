@@ -1,8 +1,9 @@
 FROM node:14
 
-COPY ./src ./src
-COPY ./public ./public
-COPY package-lock.json package.json tsconfig.json rollup.config.js ./
+WORKDIR /app
+COPY ./src /app/src
+COPY ./public /app/public
+COPY package-lock.json package.json tsconfig.json rollup.config.js /app/
 
 RUN npm ci
 RUN npm run build
