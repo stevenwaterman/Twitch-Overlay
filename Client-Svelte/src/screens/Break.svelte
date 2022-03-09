@@ -23,10 +23,7 @@ import AlertController from "../alerts/AlertController.svelte";
   let slide = randomSlide();
 
   setInterval(() => {
-    slide++;
-    if (slide > maxSlide) {
-      slide = randomSlide();
-    }
+    slide = randomSlide();
   }, slideDurationSeconds * 1000);
 
   let clientWidth: number;
