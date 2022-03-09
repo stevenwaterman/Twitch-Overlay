@@ -15,7 +15,9 @@ import AlertController from "../alerts/AlertController.svelte";
   const slideDurationSeconds: number = 8;
 
   function randomSlide(): number {
-    return Math.round(Math.random() * (maxSlide - minSlide) + minSlide);
+    const slide = Math.round(Math.random() * (maxSlide - minSlide) + minSlide);
+    console.log("slide", slide);
+    return slide;
   }
 
   let slide = randomSlide();
