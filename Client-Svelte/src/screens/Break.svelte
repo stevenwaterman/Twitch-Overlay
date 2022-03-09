@@ -7,7 +7,7 @@
 import AlertController from "../alerts/AlertController.svelte";
 
   const minSlide: number = 1;
-  const maxSlide: number = 72;
+  const maxSlide: number = 131;
   const slides: number[] = Array(maxSlide - minSlide + 1)
     .fill(null)
     .map((_, index) => index + minSlide);
